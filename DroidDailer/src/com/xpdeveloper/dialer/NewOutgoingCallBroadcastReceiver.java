@@ -24,8 +24,11 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		// http://developer.android.com/reference/android/content/Intent.html#EXTRA_PHONE_NUMBER
-		Bundle extras = intent.getExtras();
-		String originalDestination = (String) extras.get(Intent.EXTRA_PHONE_NUMBER);
+		String originalDestination = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+		
+		// Disable the real outgoing call
+		// TODO is this logged as an outgoing call?
+		setResultData(null);
 		
 		Log.i(TAG, "Intercepted call to:" + originalDestination);
 		try {
