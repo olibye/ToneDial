@@ -6,9 +6,9 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.xpdeveloper.dialer.DroidDialer;
 
-public class ToneGeneratorTest extends ActivityInstrumentationTestCase2<DroidDialer> {
+public class ToneGeneratorTest extends
+		ActivityInstrumentationTestCase2<DroidDialer> {
 
-	
 	public ToneGeneratorTest() {
 		super(DroidDialer.class.getPackage().getName(), DroidDialer.class);
 	}
@@ -16,22 +16,17 @@ public class ToneGeneratorTest extends ActivityInstrumentationTestCase2<DroidDia
 	public synchronized void testTwoTone() throws InterruptedException {
 		// Stream Types
 		// http://developer.android.com/reference/android/media/AudioManager.html
-		final ToneGenerator _toneGenerator= new ToneGenerator(AudioManager.STREAM_DTMF, 50);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_1,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_2,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_3,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_4,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_5,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_6,1000));
-		this.wait(1000);
-		assertTrue(_toneGenerator.startTone(ToneGenerator.TONE_DTMF_7,1000));
-		this.wait(1000);
-		_toneGenerator.release();
+		DroidDialer unit = getActivity();
+		unit.dial("1 2");
 	}
-	
+
+	public void testToneOffsetCharacters() {
+		int zeroNumericValue = Character.getNumericValue('0');
+		int oneNumericValue = Character.getNumericValue('1');
+		int aNumericValue = Character.getNumericValue('a');
+		assertEquals("Expecting Zero", 0, zeroNumericValue);
+		assertEquals("Expecting One", 1, oneNumericValue);
+		assertEquals("Expecting Ten", 10, aNumericValue);
+	}
+
 }
