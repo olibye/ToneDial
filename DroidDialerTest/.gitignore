@@ -1,0 +1,9 @@
+# Generated files
+/bin/*
+/gen/*
+
+# Jgit appears to ignore the above
+# So filter out the files inside
+*.dex
+*.apk
+*.ap_
