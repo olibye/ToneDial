@@ -16,14 +16,11 @@
 package com.xpdeveloper.dialer;
 
 import android.app.Activity;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import static android.media.ToneGenerator.*;
 
 /**
  * 
@@ -31,11 +28,6 @@ import static android.media.ToneGenerator.*;
  * 
  */
 public class DroidDialer extends Activity implements View.OnClickListener {
-	private static final int TONE_DURATION = 200;
-	private static final int TONE_PAUSE = 50;
-	private final ToneGenerator _toneGenerator = new ToneGenerator(
-			AudioManager.STREAM_DTMF, 70);
-
 	private EditText _numberEditText;
 
 	/** Called when the activity is first created. */
@@ -54,41 +46,14 @@ public class DroidDialer extends Activity implements View.OnClickListener {
 	public void onClick(View dialButton) {
 		String number = _numberEditText.getText().toString(); 
 		try {
-			dial(number);
+			DTMFModel.dial(number);
 		} catch (InterruptedException e) {
 			Log.e("DroidDialer", "Could not dial:"+number);
 		}
 	}
 
-	public void dial(String dialString) throws InterruptedException {
-		int digitCount = dialString.length();
-		for (int digitIndex = 0; digitIndex < digitCount; digitIndex++) {
-			char digit = dialString.charAt(digitIndex);
-			dial(digit);
-		}
-
-	}
-
-	private final int[] toneCodes = new int[] { TONE_DTMF_0, TONE_DTMF_1,
-			TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
-			TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
-
-	private synchronized void dial(char digit) throws InterruptedException {
-		if (Character.isDigit(digit)) {
-			// ignore non digits
-			int numericValue = Character.getNumericValue(digit);
-			_toneGenerator.startTone(toneCodes[numericValue],TONE_DURATION);
-			this.wait(TONE_DURATION + TONE_PAUSE); // TODO should not wait on a UI thread?
-		}
-		
-		if (Character.isSpace(digit)) {
-			this.wait(TONE_DURATION + TONE_PAUSE);
-		}
-	}
-
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
 

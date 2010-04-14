@@ -1,9 +1,8 @@
 package com.xpdeveloper.dialer.test;
 
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.xpdeveloper.dialer.DTMFModel;
 import com.xpdeveloper.dialer.DroidDialer;
 
 public class ToneGeneratorTest extends
@@ -17,7 +16,7 @@ public class ToneGeneratorTest extends
 		// Stream Types
 		// http://developer.android.com/reference/android/media/AudioManager.html
 		DroidDialer unit = getActivity();
-		unit.dial("1 2");
+		DTMFModel.dial("1 2");
 	}
 
 	public void testToneOffsetCharacters() {
