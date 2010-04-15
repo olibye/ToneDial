@@ -16,45 +16,44 @@
 package com.xpdeveloper.dialer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.provider.ContactsContract.Contacts;
 
 /**
  * 
  * @author byeo
  * 
  */
-public class DroidDialer extends Activity implements View.OnClickListener {
-	private EditText _numberEditText;
-
-	/** Called when the activity is first created. */
+public class DroidDialer extends Activity {
+	private static boolean _running = false;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		Button dialButton = (Button) findViewById(R.id.dialButton);
-		dialButton.setOnClickListener(this);
-
-		_numberEditText = (EditText) findViewById(R.id.numberEdit);
+		
+		start();
+		
+		// Launch the contacts browser
+		Intent intent = new Intent(Intent.ACTION_VIEW, Contacts.CONTENT_URI);
+		startActivity(intent);
 	}
-
+		
 	@Override
-	public void onClick(View dialButton) {
-		String number = _numberEditText.getText().toString(); 
-		try {
-			DTMFModel.dial(number);
-		} catch (InterruptedException e) {
-			Log.e("DroidDialer", "Could not dial:"+number);
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
+	protected void onDestroy() {	
 		super.onDestroy();
+		stop();
 	}
 
+	private static void start() {
+		_running = true;
+	}
+
+	private static void stop() {
+		_running = false;
+	}
+	
+	public static boolean isRunning() {
+		return _running;
+	}
 }

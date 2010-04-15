@@ -23,6 +23,7 @@ public class DTMFModel {
 	static final int TONE_PAUSE = 50;
 	static final ToneGenerator _toneGenerator = new ToneGenerator(
 	AudioManager.STREAM_DTMF, 70);
+	
 	static final int[] toneCodes = new int[] { TONE_DTMF_0, TONE_DTMF_1,
 	TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
 	TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
@@ -39,9 +40,13 @@ public class DTMFModel {
 	private static synchronized void dial(char digit) throws InterruptedException {
 		if (Character.isDigit(digit)) {
 			// ignore non digits
+			
+			// wait before tone as this helps a sleeping amp wake up
+			// last pause isn't needed
+			DTMFModel.class.wait(TONE_DURATION + TONE_PAUSE);
+
 			int numericValue = Character.getNumericValue(digit);
 			_toneGenerator.startTone(toneCodes[numericValue],TONE_DURATION);
-			DTMFModel.class.wait(TONE_DURATION + TONE_PAUSE); // TODO should not wait on a UI thread?
 		}
 		
 		if (Character.isSpace(digit)) {
