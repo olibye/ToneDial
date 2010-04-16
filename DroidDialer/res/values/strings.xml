@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, Home!</string>
-	<string name="app_name">DroidDailer</string>
-	<string name="button_dial">Dial</string>
-	<string name="checkbox_enable_tones_name">Enable Tones</string>
+	<string name="app_name">Tone Dialer</string>
+	<string name="button_contacts_name">Show Contacts</string>
+	<string name="enable_tone_name">Enable DTMF Tones</string>
+	<string name="enable_phone_name">Enable Cell Phone</string>
 </resources>

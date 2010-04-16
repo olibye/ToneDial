@@ -16,18 +16,26 @@
 	android:orientation="vertical" android:paddingLeft="6dip"
 	android:paddingRight="6dip" android:paddingBottom="3dip">
 
-	<CheckBox android:text="@string/checkbox_enable_tones_name"  android:id="@+id/EnableTonesCheckBox"
-		android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="right"/>
+	<RadioGroup android:id="@+id/RadioGroupEnable"
+		android:layout_width="wrap_content" android:layout_height="wrap_content">
+		
+		<RadioButton android:text="@string/enable_tone_name"
+			android:id="@+id/RadioButtonTone" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></RadioButton>
+		<RadioButton android:text="@string/enable_phone_name"
+			android:id="@+id/RadioButtonPhone" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></RadioButton>
+	</RadioGroup>
 	
-	<EditText android:id="@+id/numberEdit" android:maxLines="1"
-		android:layout_marginTop="2dip" android:layout_width="wrap_content"
-		android:ems="25" android:layout_height="wrap_content"
-		android:scrollHorizontally="true" android:inputType="phone" />
+
+	<Button android:id="@+id/button_contacts" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="left"
+		android:text="@string/button_contacts_name" />
 
 
-	<Button android:id="@+id/dialButton" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_gravity="right"
-		android:text="@string/button_dial" />
+
+
+
 
 
 </LinearLayout>
