@@ -17,6 +17,7 @@ package com.xpdeveloper.dialer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 
@@ -26,34 +27,41 @@ import android.provider.ContactsContract.Contacts;
  * 
  */
 public class DroidDialer extends Activity {
-	private static boolean _running = false;
-	
+	private static boolean _tonesEnabled = false; //TODO move this into a service
+	public static String PREFS_NAME = "DroidDailer";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		start();
-		
+		setContentView(R.layout.main);
+
+	}
+
+	private void launchContactChooser() {
 		// Launch the contacts browser
 		Intent intent = new Intent(Intent.ACTION_VIEW, Contacts.CONTENT_URI);
 		startActivity(intent);
 	}
-		
+
 	@Override
-	protected void onDestroy() {	
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
 		super.onDestroy();
-		stop();
 	}
 
-	private static void start() {
-		_running = true;
+	public void setTonesEnabled(boolean enableTones) {
+		_tonesEnabled = enableTones;
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("enableTones", enableTones);
+		editor.commit();
 	}
 
-	private static void stop() {
-		_running = false;
-	}
-	
-	public static boolean isRunning() {
-		return _running;
+	public static boolean areTonesEnabled() {
+		return _tonesEnabled;
 	}
 }

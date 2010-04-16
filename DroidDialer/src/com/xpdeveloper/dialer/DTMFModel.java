@@ -10,47 +10,53 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 /**
- * I generate DTMF tones.
- * They may me sent to me from a GUI or a BroadCast Receiver 
+ * I generate DTMF tones. They may be sent to me from a GUI or a
+ * BroadCastReceiver
  */
-public class DTMFModel {
+public class DTMFModel implements IDTMFModel {
 
-	static final int TONE_DURATION = 200;
-	static final int TONE_PAUSE = 50;
-	static final ToneGenerator _toneGenerator = new ToneGenerator(
-	AudioManager.STREAM_DTMF, 70);
-	
+	static final int TONE_DURATION = 120;
+	static final int TONE_PAUSE = 120;
+
 	static final int[] toneCodes = new int[] { TONE_DTMF_0, TONE_DTMF_1,
-	TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
-	TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
+			TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
+			TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
 
-	public static void dial(String dialString) throws InterruptedException {
+	public void dial(String dialString, ToneGenerator toneGenerator)
+			throws InterruptedException {
 		int digitCount = dialString.length();
-		for (int digitIndex = 0; digitIndex < digitCount; digitIndex++) {
-			char digit = dialString.charAt(digitIndex);
-			dial(digit);
+
+		if (digitCount > 0) {
+			// Pause longer for the first tone
+			// We typically see "AudioFlinger write blocked for 172 ms
+			char digit = dialString.charAt(0);
+			dial(digit, TONE_PAUSE * 2, toneGenerator);
+
+			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
+				dial(dialString.charAt(digitIndex), TONE_PAUSE, toneGenerator);
+			}
 		}
-	
+
 	}
 
-	private static synchronized void dial(char digit) throws InterruptedException {
+	synchronized void dial(final char digit, final int pause,
+			final ToneGenerator toneGenerator) throws InterruptedException {
 		if (Character.isDigit(digit)) {
 			// ignore non digits
-			
+
 			// wait before tone as this helps a sleeping amp wake up
 			// last pause isn't needed
-			DTMFModel.class.wait(TONE_DURATION + TONE_PAUSE);
+			wait(TONE_DURATION + pause);
 
 			int numericValue = Character.getNumericValue(digit);
-			_toneGenerator.startTone(toneCodes[numericValue],TONE_DURATION);
+			toneGenerator.startTone(toneCodes[numericValue], TONE_DURATION);
 		}
-		
+
 		if (Character.isSpace(digit)) {
-			DTMFModel.class.wait(TONE_DURATION + TONE_PAUSE);
+			wait(TONE_DURATION + pause);
 		}
 	}
 

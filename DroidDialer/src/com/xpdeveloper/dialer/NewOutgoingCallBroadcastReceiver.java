@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.util.Log;
 
 /**
@@ -24,6 +26,16 @@ import android.util.Log;
 public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 	private static final String TAG = "NewOutgoingCallBroadcastReceiver";
 
+	private final IDTMFModel _model;
+
+	public NewOutgoingCallBroadcastReceiver() {
+		this(new DTMFModel());
+	}
+
+	public NewOutgoingCallBroadcastReceiver(IDTMFModel model) {
+		_model = model;
+	}
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
@@ -38,7 +50,8 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 			setResultData(null);
 
 			try {
-				DTMFModel.dial(originalDestination);
+				_model.dial(originalDestination, new ToneGenerator(
+						AudioManager.STREAM_DTMF, 80));
 			} catch (InterruptedException e) {
 				Log.e(TAG, "Unable to generate DTMF tones", e);
 			}
@@ -46,7 +59,7 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 
 	}
 
-	static private boolean shouldGenerateTonesNotCall(Context context) {
-		return DroidDialer.isRunning();
+	private final boolean shouldGenerateTonesNotCall(Context context) {
+		return DroidDialer.areTonesEnabled();
 	}
 }
