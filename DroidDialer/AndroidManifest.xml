@@ -15,16 +15,9 @@
 			</intent-filter>
 		</activity>
 
-		<receiver android:name=".NewOutgoingCallBroadcastReceiver">
-			<!--
-				http://developer.android.com/reference/android/content/Intent.html#ACTION_NEW_OUTGOING_CALL
-			-->
-			<intent-filter>
-				<action android:name="android.intent.action.NEW_OUTGOING_CALL"></action>
-				<category android:name="android.intent.category.ALTERNATIVE"></category>
-			</intent-filter>
-		</receiver>
-
 	</application>
+
+	<!--  required for testing ;-( -->
+	<uses-permission android:name="android.permission.CALL_PHONE" />
 
 </manifest> 

@@ -5,9 +5,12 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
+import android.provider.ContactsContract.Contacts;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.xpdeveloper.dialer.DTMFModel;
@@ -41,35 +44,34 @@ public class ToneGeneratorTest extends
 	}
 
 	public void testTonesOnPreference() throws InterruptedException {
-		DroidDialer activity = (DroidDialer)getActivity();
-		activity.setTonesEnabled(true);
 		
 		final IDTMFModel mockModel = _mockery.mock(IDTMFModel.class);
 		_mockery.checking(new Expectations() {{
 			one(mockModel).dial(with("42"), with(any(ToneGenerator.class)));
 		}});
+
+		DroidDialer unit = (DroidDialer)getActivity();
+		unit.setModel(mockModel);
+		unit.setTonesEnabled(true);
 		
-		NewOutgoingCallBroadcastReceiver unit = new NewOutgoingCallBroadcastReceiver(mockModel);
-		Intent intent = new Intent();
-		intent.putExtra(Intent.EXTRA_PHONE_NUMBER, "42");
-		unit.onReceive(getActivity(), intent);
+		Intent callIntent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:42"));
+		unit.startActivity(callIntent);
 		
 		_mockery.assertIsSatisfied();
 	}
 
 	public void testTonesOffPreference() throws InterruptedException {
-		DroidDialer activity = (DroidDialer)getActivity();
-		activity.setTonesEnabled(false);
-		
 		final IDTMFModel mockModel = _mockery.mock(IDTMFModel.class);
 		_mockery.checking(new Expectations() {{
 			never(mockModel);
 		}});
+
+		DroidDialer unit = (DroidDialer)getActivity();
+		unit.setModel(mockModel);
+		unit.setTonesEnabled(false);
 		
-		NewOutgoingCallBroadcastReceiver unit = new NewOutgoingCallBroadcastReceiver(mockModel);
-		Intent intent = new Intent();
-		intent.putExtra(Intent.EXTRA_PHONE_NUMBER, "42");
-		unit.onReceive(getActivity(), intent);
+		Intent callIntent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:42"));
+		unit.startActivity(callIntent);
 		
 		_mockery.assertIsSatisfied();
 	}

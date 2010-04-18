@@ -17,6 +17,7 @@ package com.xpdeveloper.dialer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
@@ -32,15 +33,36 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
  * 
  */
 public class DroidDialer extends Activity {
-	private static final String PREF_ENABLE_TONES = "enableTones";
-	private static boolean _tonesEnabled = false; // TODO move this into a
-													// service
 	public static String PREFS_NAME = "DroidDailer";
+
+	private static final String PREF_ENABLE_TONES = "enableTones";
+
 	private RadioGroup _enableGroup;
+	private NewOutgoingCallBroadcastReceiver _receiver;
+	private IDTMFModel _model;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		_model = new DTMFModel();
+
+		setupReciver();
+		setupUi();
+
+	}
+
+	public void setModel(IDTMFModel model) {
+		_model = model;
+		setupReciver();
+	}
+
+	public void setupReciver() {
+		// reset myself from preferences
+		setTonesEnabled(getTonesEnabled());
+	}
+
+	private final void setupUi() {
 		setContentView(R.layout.main);
 
 		_enableGroup = (RadioGroup) findViewById(R.id.RadioGroupEnable);
@@ -60,7 +82,8 @@ public class DroidDialer extends Activity {
 		contactsButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Contacts.CONTENT_URI);
+				Intent intent = new Intent(Intent.ACTION_VIEW,
+						Contacts.CONTENT_URI);
 				startActivity(intent);
 			}
 		});
@@ -73,31 +96,41 @@ public class DroidDialer extends Activity {
 		return R.id.RadioButtonPhone;
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
+	/**
+	 * http://developer.android.com/reference/android/content/Intent.html#
+	 * ACTION_NEW_OUTGOING_CALL Register/Unregister for
+	 * android.intent.action.NEW_OUTGOING_CALL Category:
+	 * android.intent.category.ALTERNATIVE
+	 * 
+	 * @param enableTones
+	 */
 	public void setTonesEnabled(boolean enableTones) {
-		_tonesEnabled = enableTones;
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(PREF_ENABLE_TONES, enableTones);
 		editor.commit();
+
+		manageRegistration(enableTones);
+	}
+
+	private void manageRegistration(boolean enableTones) {
+		if (enableTones) {
+			if (_receiver == null) {
+				_receiver = new NewOutgoingCallBroadcastReceiver(_model);
+			}
+
+			registerReceiver(_receiver, new IntentFilter(
+					Intent.ACTION_NEW_OUTGOING_CALL));
+		} else {
+			if (_receiver != null) {
+				unregisterReceiver(_receiver);
+				_receiver = null; // It's not useable anymore
+			}
+		}
 	}
 
 	public boolean getTonesEnabled() {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		_tonesEnabled = settings.getBoolean(PREF_ENABLE_TONES, true);
-		return _tonesEnabled;
-	}
-
-	public static boolean areTonesEnabled() {
-		return _tonesEnabled;
+		return settings.getBoolean(PREF_ENABLE_TONES, true);
 	}
 }
