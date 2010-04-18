@@ -1,15 +1,12 @@
 package com.xpdeveloper.dialer;
 
-import java.util.List;
+import java.net.URI;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -24,42 +21,25 @@ import android.util.Log;
  * 
  */
 public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
-	private static final String TAG = "NewOutgoingCallBroadcastReceiver";
-
-	private final IDTMFModel _model;
-
-	public NewOutgoingCallBroadcastReceiver() {
-		this(new DTMFModel());
-	}
-
-	public NewOutgoingCallBroadcastReceiver(IDTMFModel model) {
-		_model = model;
-	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
 		// http://developer.android.com/reference/android/content/Intent.html#EXTRA_PHONE_NUMBER
 		String originalDestination = intent
 				.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-		Log.i(TAG, "Intercepted call to:" + originalDestination);
+		Log.i(DroidDialer.TAG, "Intercepted call to:" + originalDestination);
 
-		// Disable the real outgoing call
-		// TODO is this logged as an outgoing call?
-		if (shouldGenerateTonesNotCall(context)) {
-			setResultData(null);
+		Intent dialIntent = new Intent(context, DTMFModel.class);
+		dialIntent.setAction(DTMFModel.ACTION_DIAL);
+		dialIntent.setData(Uri.parse("tel:" + originalDestination));
 
-			try {
-				_model.dial(originalDestination, new ToneGenerator(
-						AudioManager.STREAM_DTMF, 80));
-			} catch (InterruptedException e) {
-				Log.e(TAG, "Unable to generate DTMF tones", e);
+		context.startService(dialIntent);
+
+		Bundle extras = dialIntent.getExtras();
+		if (extras != null) {
+			if (extras.containsKey(DTMFModel.EXTRA_DTMF_DIALED)) {
+				setResultData(null);
 			}
 		}
-
-	}
-
-	private final boolean shouldGenerateTonesNotCall(Context context) {
-		return DroidDialer.areTonesEnabled();
 	}
 }

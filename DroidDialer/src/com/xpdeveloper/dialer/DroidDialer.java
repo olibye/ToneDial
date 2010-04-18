@@ -32,6 +32,8 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
  * 
  */
 public class DroidDialer extends Activity {
+	public static final String TAG = "DroidDialer";
+
 	private static final String PREF_ENABLE_TONES = "enableTones";
 	private static boolean _tonesEnabled = false; // TODO move this into a
 													// service

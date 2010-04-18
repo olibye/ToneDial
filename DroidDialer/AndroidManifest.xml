@@ -25,6 +25,8 @@
 			</intent-filter>
 		</receiver>
 
+        <service android:name=".DTMFModel" />
+
 	</application>
 
 </manifest> 
