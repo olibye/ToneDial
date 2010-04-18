@@ -21,6 +21,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -74,7 +75,12 @@ public class DroidDialer extends Activity {
 				if (checkedId == R.id.RadioButtonTone) {
 					setTonesEnabled(true);
 				}
-				setTonesEnabled(false);
+				else if (checkedId == R.id.RadioButtonPhone) {
+					setTonesEnabled(false);
+				}
+				else {
+					Log.i(PREFS_NAME, "Ignoring unknown radio button id:" + checkedId);
+				}
 			}
 		});
 
