@@ -15,30 +15,23 @@
  */
 package com.xpdeveloper.dialer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract.Contacts;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.preference.CheckBoxPreference;
+import android.preference.PreferenceActivity;
 
 /**
  * 
  * @author byeo
  * 
  */
-public class DroidDialer extends Activity {
+public class DroidDialer extends PreferenceActivity {
 	public static String PREFS_NAME = "DroidDailer";
 
 	private static final String PREF_ENABLE_TONES = "enableTones";
 
-	private RadioGroup _enableGroup;
 	private NewOutgoingCallBroadcastReceiver _receiver;
 	private IDTMFModel _model;
 
@@ -64,42 +57,7 @@ public class DroidDialer extends Activity {
 	}
 
 	private final void setupUi() {
-		setContentView(R.layout.main);
-
-		_enableGroup = (RadioGroup) findViewById(R.id.RadioGroupEnable);
-		_enableGroup.check(checkedButtonId(getTonesEnabled()));
-		_enableGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
-				if (checkedId == R.id.RadioButtonTone) {
-					setTonesEnabled(true);
-				}
-				else if (checkedId == R.id.RadioButtonPhone) {
-					setTonesEnabled(false);
-				}
-				else {
-					Log.i(PREFS_NAME, "Ignoring unknown radio button id:" + checkedId);
-				}
-			}
-		});
-
-		Button contactsButton = (Button) findViewById(R.id.button_contacts);
-		contactsButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(Intent.ACTION_VIEW,
-						Contacts.CONTENT_URI);
-				startActivity(intent);
-			}
-		});
-	}
-
-	private int checkedButtonId(boolean tonesEnabled) {
-		if (tonesEnabled) {
-			return R.id.RadioButtonTone;
-		}
-		return R.id.RadioButtonPhone;
+		addPreferencesFromResource(R.xml.preferences);
 	}
 
 	/**
