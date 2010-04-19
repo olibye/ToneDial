@@ -20,7 +20,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 
 /**
  * 
@@ -42,8 +44,8 @@ public class DroidDialer extends PreferenceActivity {
 		_model = new DTMFModel();
 
 		setupReciver();
-		setupUi();
 
+		addPreferencesFromResource(R.xml.preferences);
 	}
 
 	public void setModel(IDTMFModel model) {
@@ -56,8 +58,16 @@ public class DroidDialer extends PreferenceActivity {
 		setTonesEnabled(getTonesEnabled());
 	}
 
-	private final void setupUi() {
-		addPreferencesFromResource(R.xml.preferences);
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		boolean reply = super.onPreferenceTreeClick(preferenceScreen, preference);
+		
+		if (preference instanceof CheckBoxPreference) {
+			CheckBoxPreference enableCheckBox = (CheckBoxPreference)preference;
+			setTonesEnabled(enableCheckBox.isChecked());
+		}
+		
+		return reply;
 	}
 
 	/**
@@ -69,11 +79,6 @@ public class DroidDialer extends PreferenceActivity {
 	 * @param enableTones
 	 */
 	public void setTonesEnabled(boolean enableTones) {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean(PREF_ENABLE_TONES, enableTones);
-		editor.commit();
-
 		manageRegistration(enableTones);
 	}
 

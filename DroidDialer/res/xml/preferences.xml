@@ -15,6 +15,7 @@
 
 	<CheckBoxPreference android:key="enableTones"
 		android:title="@string/enable_tones_title"
-		android:summary="@string/enable_tones_summary" />
+		android:summaryOn="@string/enable_tones_summaryOn"
+		android:summaryOff="@string/enable_tones_summaryOff"/>
 
 </PreferenceScreen>

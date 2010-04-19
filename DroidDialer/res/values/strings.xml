@@ -3,5 +3,6 @@
 	<string name="app_name">Tone Dialer</string>
 	<string name="button_contacts_name">Show Contacts</string>
 	<string name="enable_tones_title">Tone dial</string>
-	<string name="enable_tones_summary">Dial with tones from speaker</string>
+	<string name="enable_tones_summaryOn">Dial with tones from speaker</string>
+	<string name="enable_tones_summaryOff">Dial normally on network</string>
 </resources>
