@@ -1,22 +1,18 @@
 package com.xpdeveloper.dialer.test;
 
-import static org.hamcrest.Matchers.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
-import android.provider.ContactsContract.Contacts;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.xpdeveloper.dialer.DTMFModel;
 import com.xpdeveloper.dialer.DroidDialer;
 import com.xpdeveloper.dialer.IDTMFModel;
-import com.xpdeveloper.dialer.NewOutgoingCallBroadcastReceiver;
 
 public class ToneGeneratorTest extends
 		ActivityInstrumentationTestCase2<DroidDialer> {

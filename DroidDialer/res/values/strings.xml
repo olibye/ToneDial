@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Tone Dialer</string>
+	<string name="app_name">Tone Dial</string>
 	<string name="button_contacts_name">Show Contacts</string>
 	<string name="enable_tones_title">Tone dial</string>
-	<string name="enable_tones_summaryOn">Dial with tones from speaker</string>
+	<string name="enable_tones_summaryOn">Dial with tones from the speaker</string>
 	<string name="enable_tones_summaryOff">Dial normally on network</string>
 </resources>
