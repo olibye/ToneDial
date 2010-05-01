@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.IBinder;
+import android.os.Parcel;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -118,9 +119,8 @@ public class ToneDialService extends Service {
 	private void displayNotification() {
 		int icon = R.drawable.stat_service;
 		CharSequence tickerText = getText(R.string.ticker_tone_dial_on);
-		long when = System.currentTimeMillis();
 		
-		Notification notification = new Notification(icon, tickerText, when);
+		Notification notification = new Notification(icon, tickerText, 0);
 		// We will cancel this notification
 		notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 		

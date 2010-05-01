@@ -2,13 +2,13 @@
 <resources>
 	<string name="app_name">Tone Dial</string>
 	<string name="button_contacts_name">Show Contacts</string>
-	<string name="enable_tones_title">Tone dial</string>
-	<string name="enable_tones_summaryOn">Play tones from the speaker</string>
-	<string name="enable_tones_summaryOff">Play tones from the speaker</string>
+	<string name="enable_tones_title">Tone Dialing</string>
+	<string name="enable_tones_summaryOn">Network dialing disabled</string>
+	<string name="enable_tones_summaryOff">Turn on Tone Dialing</string>
 	
 	<!-- Notification strings -->
-	<string name="ticker_tone_dial_on">Tone Dial On</string>
-	<string name="ticker_tone_dial_off">Tone Dial Off</string>
+	<string name="ticker_tone_dial_on">Tone Dialing On</string>
+	<string name="ticker_tone_dial_off">Tone Dialing Off</string>
 	<string name="notification_title">Tone Dialing</string>
-	<string name="notification_text">Calls will be tone dialed, Network dialing is diabled</string>
+	<string name="notification_text">Call over a land line, Mobile dialing diabled.</string>
 </resources>
