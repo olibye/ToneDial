@@ -5,28 +5,21 @@
 
 	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
-	<application android:icon="@drawable/icon" android:label="@string/app_name"
-		android:debuggable="true">
+	<application android:label="@string/app_name"
+		android:debuggable="true" android:icon="@drawable/ic_launcher">
 
-		<activity android:label="@string/app_name" android:name=".DroidDialer">
+		<activity android:label="@string/app_name" android:name=".ToneDialActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
-		<receiver android:name=".NewOutgoingCallBroadcastReceiver">
-			<!--
-				http://developer.android.com/reference/android/content/Intent.html#ACTION_NEW_OUTGOING_CALL
-			-->
-			<intent-filter>
-				<action android:name="android.intent.action.NEW_OUTGOING_CALL"></action>
-				<category android:name="android.intent.category.ALTERNATIVE"></category>
-			</intent-filter>
-		</receiver>
-
-        <service android:name=".DTMFModel" />
+        <service android:name=".ToneDialService" />
 
 	</application>
+
+	<!--  required for testing ;-( -->
+	<uses-permission android:name="android.permission.CALL_PHONE" />
 
 </manifest> 

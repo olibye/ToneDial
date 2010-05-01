@@ -2,7 +2,7 @@ package com.xpdeveloper.dialer;
 
 import android.media.ToneGenerator;
 
-public interface IDTMFModel {
+public interface IToneDialModel {
 
 	/**
 	 * 
@@ -11,5 +11,4 @@ public interface IDTMFModel {
 	 * @throws InterruptedException because we Object.wait() for tones to play.
 	 */
 	public void dial(String dialString, ToneGenerator toneGenerator) throws InterruptedException;
-
 }
