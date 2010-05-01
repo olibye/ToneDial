@@ -18,8 +18,11 @@
         <service android:name=".ToneDialService" />
 
 	</application>
-
-	<!--  required for testing ;-( -->
-	<uses-permission android:name="android.permission.CALL_PHONE" />
+	
+	<!-- Required for robotium testing -->
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	
+	<!-- Lower this when tested -->
+	<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7" />
 
 </manifest> 
