@@ -35,7 +35,7 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 
 	private void invokeToneDialService(Context context,
 			String originalDestination) {
-		Intent dialIntent = new Intent(context, ToneDialModel.class);
+		Intent dialIntent = new Intent(context, ToneDialService.class);
 		dialIntent.setAction(ToneDialModel.ACTION_DIAL);
 		dialIntent.setData(Uri.parse("tel:" + originalDestination));
 
