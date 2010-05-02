@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -21,6 +22,9 @@ import android.util.Log;
 public class ToneDialService extends Service {
 	public static final String ACTION_DIAL = "DIAL";
 	private static final int TONE_DIAL_SERVICE_TICKER_ID = 1;
+
+	public static final String EMERGENCY_999 = "999";
+	public static final String EMERGENCY_911 = "911";
 
 	private NewOutgoingCallBroadcastReceiver _receiver;
 	private IToneDialModel _model;
@@ -41,15 +45,14 @@ public class ToneDialService extends Service {
 			// Have I been as
 			if (shouldToneDial(intent)) {
 				String originalDestination = intent.getDataString();
+				if (!isEmergencyNumer(originalDestination)) {
 
-				Log.i(ToneDialActivity.TAG, "Service tone generation for:"
-						+ originalDestination);
-
-				try {
-					_model.dial(originalDestination, _toneGenerator);
-				} catch (InterruptedException e) {
-					Log.e(ToneDialActivity.TAG,
-							"Unable to generate DTMF tones", e);
+					try {
+						_model.dial(originalDestination, _toneGenerator);
+					} catch (InterruptedException e) {
+						Log.e(ToneDialActivity.TAG,
+								"Unable to generate DTMF tones", e);
+					}
 				}
 			} else {
 				// I've just been started
@@ -58,6 +61,44 @@ public class ToneDialService extends Service {
 		}
 
 		return START_STICKY_COMPATIBILITY;
+	}
+
+	/**
+	 * Helper method to send commands to this service. This allows the calling
+	 * broadcast receiver to decide if it should disable mobile network dialing
+	 * 
+	 * @param context
+	 * @param originalDestination
+	 * @return true if the message intent to sent to the service
+	 */
+	public static boolean invoke(Context context, String originalDestination) {
+		if (!isEmergencyNumer(originalDestination)) {
+			Intent dialIntent = new Intent(context, ToneDialService.class);
+			dialIntent.setAction(ToneDialModel.ACTION_DIAL);
+			dialIntent.setData(Uri.parse("tel:" + originalDestination));
+
+			context.startService(dialIntent);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Provide a way to filter out Emergency numbers We should not stop the
+	 * mobile from dialing these
+	 * 
+	 * @param originalDestination
+	 * @return
+	 */
+	public static boolean isEmergencyNumer(String originalDestination) {
+		if (EMERGENCY_999.equals(originalDestination)) {
+			return true;
+		}
+
+		if (EMERGENCY_911.equals(originalDestination)) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean shouldToneDial(Intent intent) {
@@ -117,20 +158,23 @@ public class ToneDialService extends Service {
 	private void displayNotification() {
 		int icon = R.drawable.stat_service;
 		CharSequence tickerText = getText(R.string.ticker_tone_dial_on);
-		
+
 		Notification notification = new Notification(icon, tickerText, 0);
 		// We will cancel this notification
-		notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-		
+		notification.flags |= Notification.FLAG_ONGOING_EVENT
+				| Notification.FLAG_NO_CLEAR;
+
 		// Setup the pending intent to launch the UI
 		Intent launchToneDialActivity = new Intent(this, ToneDialActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, launchToneDialActivity, 0);
-		
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				launchToneDialActivity, 0);
+
 		// Build the notifications
 		Context context = getApplicationContext();
 		CharSequence contentTitle = getText(R.string.notification_title);
 		CharSequence contentText = getText(R.string.notification_text);
-		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		notification.setLatestEventInfo(context, contentTitle, contentText,
+				contentIntent);
 
 		// Raise the notification
 		NotificationManager notificationManager = notificationManager();
@@ -142,7 +186,7 @@ public class ToneDialService extends Service {
 		NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
 		return notificationManager;
 	}
-	
+
 	private void cancelNotification() {
 		notificationManager().cancelAll();
 	}

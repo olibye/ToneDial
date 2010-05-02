@@ -2,6 +2,7 @@ package net.xpdeveloper.dialer.test;
 
 import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.ToneDialModel;
+import net.xpdeveloper.dialer.ToneDialService;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -35,5 +36,10 @@ public class ToneGeneratorTest extends
 		assertEquals("Expecting One", 1, oneNumericValue);
 		assertEquals("Expecting Ten", 10, aNumericValue);
 	}
-
+	
+	
+	public void testServiceIgnoresEmergencyNumbers() {		
+		assertFalse("Should not dial 999",ToneDialService.invoke(getActivity(),"999"));
+		assertFalse("Should not dial 999",ToneDialService.invoke(getActivity(),"911"));
+	}
 }

@@ -26,20 +26,10 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 		// http://developer.android.com/reference/android/content/Intent.html#EXTRA_PHONE_NUMBER
 		String originalDestination = intent
 				.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-		Log.i(ToneDialActivity.TAG, "Intercepted call to:" + originalDestination);
-
-		invokeToneDialService(context, originalDestination);
-
-		cancelNetworkDial();
-	}
-
-	private void invokeToneDialService(Context context,
-			String originalDestination) {
-		Intent dialIntent = new Intent(context, ToneDialService.class);
-		dialIntent.setAction(ToneDialModel.ACTION_DIAL);
-		dialIntent.setData(Uri.parse("tel:" + originalDestination));
-
-		context.startService(dialIntent);
+		
+		if(ToneDialService.invoke(context, originalDestination)) {
+			cancelNetworkDial();	
+		}
 	}
 
 	private void cancelNetworkDial() {
