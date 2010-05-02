@@ -1,4 +1,4 @@
-package com.xpdeveloper.dialer;
+package net.xpdeveloper.dialer;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,9 +10,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.IBinder;
-import android.os.Parcel;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * I am started by the Launcher Activity when tone dialing is enabled.

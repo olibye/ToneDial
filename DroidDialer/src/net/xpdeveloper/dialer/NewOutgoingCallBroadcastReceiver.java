@@ -1,4 +1,4 @@
-package com.xpdeveloper.dialer;
+package net.xpdeveloper.dialer;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

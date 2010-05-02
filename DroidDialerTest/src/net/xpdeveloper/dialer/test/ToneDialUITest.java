@@ -1,15 +1,14 @@
-package com.xpdeveloper.dialer.test;
+package net.xpdeveloper.dialer.test;
 
 import java.util.ArrayList;
 
+import net.xpdeveloper.dialer.ToneDialActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.jayway.android.robotium.solo.Solo;
-import com.xpdeveloper.dialer.R;
-import com.xpdeveloper.dialer.ToneDialActivity;
 
 public class ToneDialUITest extends
 		ActivityInstrumentationTestCase2<ToneDialActivity> {

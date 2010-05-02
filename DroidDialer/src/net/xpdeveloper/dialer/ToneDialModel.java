@@ -1,4 +1,4 @@
-package com.xpdeveloper.dialer;
+package net.xpdeveloper.dialer;
 
 import static android.media.ToneGenerator.TONE_DTMF_0;
 import static android.media.ToneGenerator.TONE_DTMF_1;

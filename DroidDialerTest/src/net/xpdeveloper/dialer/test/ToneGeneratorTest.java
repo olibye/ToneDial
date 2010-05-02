@@ -1,4 +1,7 @@
-package com.xpdeveloper.dialer.test;
+package net.xpdeveloper.dialer.test;
+
+import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.ToneDialModel;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -7,8 +10,6 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.xpdeveloper.dialer.ToneDialModel;
-import com.xpdeveloper.dialer.ToneDialActivity;
 
 public class ToneGeneratorTest extends
 		ActivityInstrumentationTestCase2<ToneDialActivity> {
