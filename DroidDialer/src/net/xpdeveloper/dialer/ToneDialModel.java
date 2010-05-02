@@ -61,4 +61,22 @@ public class ToneDialModel implements IToneDialModel {
 			wait(TONE_DURATION + pause);
 		}
 	}
+
+	/**
+	 * Provide a way to filter out Emergency numbers We should not stop the
+	 * mobile from dialing these
+	 * 
+	 * @param originalDestination
+	 * @return
+	 */
+	public static boolean isEmergencyNumer(String originalDestination) {
+		if (ToneDialService.EMERGENCY_999.equals(originalDestination)) {
+			return true;
+		}
+	
+		if (ToneDialService.EMERGENCY_911.equals(originalDestination)) {
+			return true;
+		}
+		return false;
+	}
 }

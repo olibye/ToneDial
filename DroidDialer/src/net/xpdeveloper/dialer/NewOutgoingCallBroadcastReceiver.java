@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * I intercept the NEW_OUTGOING_CALL Broadcast. Generate DTMF tones to the
@@ -27,12 +26,32 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 		String originalDestination = intent
 				.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 		
-		if(ToneDialService.invoke(context, originalDestination)) {
+		if(invoke(context, originalDestination)) {
 			cancelNetworkDial();	
 		}
 	}
 
 	private void cancelNetworkDial() {
 		setResultData(null);
+	}
+
+	/**
+	 * Helper method to send commands to this service. This allows the calling
+	 * broadcast receiver to decide if it should disable mobile network dialing
+	 * 
+	 * @param context
+	 * @param originalDestination
+	 * @return true if the message intent to sent to the service
+	 */
+	public static boolean invoke(Context context, String originalDestination) {
+		if (!ToneDialModel.isEmergencyNumer(originalDestination)) {
+			Intent dialIntent = new Intent(context, ToneDialService.class);
+			dialIntent.setAction(ToneDialModel.ACTION_DIAL);
+			dialIntent.setData(Uri.parse("tel:" + originalDestination));
+	
+			context.startService(dialIntent);
+			return true;
+		}
+		return false;
 	}
 }

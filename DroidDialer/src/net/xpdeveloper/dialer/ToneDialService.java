@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -45,7 +44,7 @@ public class ToneDialService extends Service {
 			// Have I been as
 			if (shouldToneDial(intent)) {
 				String originalDestination = intent.getDataString();
-				if (!isEmergencyNumer(originalDestination)) {
+				if (!ToneDialModel.isEmergencyNumer(originalDestination)) {
 
 					try {
 						_model.dial(originalDestination, _toneGenerator);
@@ -61,44 +60,6 @@ public class ToneDialService extends Service {
 		}
 
 		return START_STICKY_COMPATIBILITY;
-	}
-
-	/**
-	 * Helper method to send commands to this service. This allows the calling
-	 * broadcast receiver to decide if it should disable mobile network dialing
-	 * 
-	 * @param context
-	 * @param originalDestination
-	 * @return true if the message intent to sent to the service
-	 */
-	public static boolean invoke(Context context, String originalDestination) {
-		if (!isEmergencyNumer(originalDestination)) {
-			Intent dialIntent = new Intent(context, ToneDialService.class);
-			dialIntent.setAction(ToneDialModel.ACTION_DIAL);
-			dialIntent.setData(Uri.parse("tel:" + originalDestination));
-
-			context.startService(dialIntent);
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Provide a way to filter out Emergency numbers We should not stop the
-	 * mobile from dialing these
-	 * 
-	 * @param originalDestination
-	 * @return
-	 */
-	public static boolean isEmergencyNumer(String originalDestination) {
-		if (EMERGENCY_999.equals(originalDestination)) {
-			return true;
-		}
-
-		if (EMERGENCY_911.equals(originalDestination)) {
-			return true;
-		}
-		return false;
 	}
 
 	public boolean shouldToneDial(Intent intent) {
