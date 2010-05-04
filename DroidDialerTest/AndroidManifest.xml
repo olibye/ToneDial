@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.xpdeveloper.dialer.test" android:versionCode="1"
+	package="net.xpdeveloper.dialer.test" android:versionCode="1"
 	android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:debuggable="true">
@@ -8,6 +8,10 @@
 		<uses-library android:name="android.test.runner" />
 	</application>
 
-	<instrumentation android:targetPackage="com.xpdeveloper.dialer"
+	<instrumentation android:targetPackage="net.xpdeveloper.dialer"
 		android:name="android.test.InstrumentationTestRunner" />
+
+	<!-- Lower this when tested -->
+	<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7" />
+
 </manifest> 

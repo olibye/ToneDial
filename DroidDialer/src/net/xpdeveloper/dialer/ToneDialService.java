@@ -22,15 +22,25 @@ public class ToneDialService extends Service {
 	public static final String ACTION_DIAL = "DIAL";
 	private static final int TONE_DIAL_SERVICE_TICKER_ID = 1;
 
-	public static final String EMERGENCY_999 = "999";
-	public static final String EMERGENCY_911 = "911";
-
 	private NewOutgoingCallBroadcastReceiver _receiver;
 	private IToneDialModel _model;
 
 	// TODO I think the tone generator should go in the model, with a release on
 	// the model
 	private ToneGenerator _toneGenerator;
+
+	/**
+	 * I'm needed by my unit tests
+	 * 
+	 * @param model
+	 */
+	public ToneDialService(IToneDialModel model) {
+		setModel(model);
+	}
+
+	public ToneDialService() {
+		this(new ToneDialModel());
+	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -44,15 +54,7 @@ public class ToneDialService extends Service {
 			// Have I been as
 			if (shouldToneDial(intent)) {
 				String originalDestination = intent.getDataString();
-				if (!ToneDialModel.isEmergencyNumer(originalDestination)) {
-
-					try {
-						_model.dial(originalDestination, _toneGenerator);
-					} catch (InterruptedException e) {
-						Log.e(ToneDialActivity.TAG,
-								"Unable to generate DTMF tones", e);
-					}
-				}
+				toneDial(originalDestination);
 			} else {
 				// I've just been started
 				displayNotification();
@@ -62,7 +64,34 @@ public class ToneDialService extends Service {
 		return START_STICKY_COMPATIBILITY;
 	}
 
-	public boolean shouldToneDial(Intent intent) {
+	/**
+	 * 
+	 * @param originalDestination
+	 * @return the number actually dialled
+	 */
+	public String toneDial(String originalDestination) {
+		String dialString = adjustNumber(originalDestination);
+		try {
+			_model.dial(dialString, _toneGenerator);
+		} catch (InterruptedException e) {
+			Log.e(ToneDialActivity.TAG, "Unable to generate DTMF tones", e);
+		}
+		return dialString;
+	}
+
+	private String adjustNumber(String originalDestination) {
+		String reply = originalDestination;
+		
+		if (originalDestination.startsWith("+")) {
+			if (originalDestination.startsWith("+1")) {
+				reply = originalDestination.substring(1);
+			}
+		}
+		
+		return reply;
+	}
+
+	private boolean shouldToneDial(Intent intent) {
 		return ACTION_DIAL.equals(intent.getAction());
 	}
 
@@ -72,7 +101,6 @@ public class ToneDialService extends Service {
 
 		_toneGenerator = new ToneGenerator(AudioManager.STREAM_DTMF, 80);
 
-		setModel(new ToneDialModel());
 		manageRegistration(true);
 	}
 

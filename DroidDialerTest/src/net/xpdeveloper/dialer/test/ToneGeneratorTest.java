@@ -1,30 +1,14 @@
 package net.xpdeveloper.dialer.test;
 
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.NumberTweaker;
 import net.xpdeveloper.dialer.ToneDialModel;
+import net.xpdeveloper.dialer.ToneDialService;
+import android.test.ServiceTestCase;
 
-import org.jmock.Mockery;
-import org.jmock.integration.junit3.JUnit3Mockery;
-
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.test.ActivityInstrumentationTestCase2;
-
-
-public class ToneGeneratorTest extends
-		ActivityInstrumentationTestCase2<ToneDialActivity> {
-	
-	Mockery _mockery = new JUnit3Mockery();
+public class ToneGeneratorTest extends ServiceTestCase<ToneDialService> {
 	
 	public ToneGeneratorTest() {
-		super(ToneDialActivity.class.getPackage().getName(), ToneDialActivity.class);
-	}
-
-	public synchronized void testTwoTone() throws InterruptedException {
-		// Stream Types
-		// http://developer.android.com/reference/android/media/AudioManager.html
-		new ToneDialModel().dial("1 2", new ToneGenerator(AudioManager.STREAM_DTMF,
-				80));
+		super(ToneDialService.class);
 	}
 
 	public void testToneOffsetCharacters() {
@@ -35,10 +19,20 @@ public class ToneGeneratorTest extends
 		assertEquals("Expecting One", 1, oneNumericValue);
 		assertEquals("Expecting Ten", 10, aNumericValue);
 	}
-	
-	
-	public void testServiceIgnoresEmergencyNumbers() {		
-		assertFalse("Should not dial 999",ToneDialModel.isEmergencyNumer("999"));
-		assertFalse("Should not dial 999",ToneDialModel.isEmergencyNumer("911"));
+
+	public void testServiceIgnoresEmergencyNumbers() {
+		assertFalse("Should not dial 999", ToneDialModel
+				.isEmergencyNumer("999"));
+		assertFalse("Should not dial 999", ToneDialModel
+				.isEmergencyNumer("911"));
+	}
+
+	public void testSwapLocalCountryPrefixForSTDPrefix()
+			throws InterruptedException {
+		NumberTweaker unit = new NumberTweaker();
+		unit.addSwap("+44", "0");
+
+		assertEquals("Should not dial the country code for our country",
+				"01202", unit.tweak("+441202"));
 	}
 }

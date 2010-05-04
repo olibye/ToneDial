@@ -26,6 +26,8 @@ public class ToneDialModel implements IToneDialModel {
 	static final int[] toneCodes = new int[] { TONE_DTMF_0, TONE_DTMF_1,
 			TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
 			TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
+	public static final String EMERGENCY_999 = "999";
+	public static final String EMERGENCY_911 = "911";
 
 	public void dial(String dialString, ToneGenerator toneGenerator)
 			throws InterruptedException {
@@ -70,11 +72,11 @@ public class ToneDialModel implements IToneDialModel {
 	 * @return
 	 */
 	public static boolean isEmergencyNumer(String originalDestination) {
-		if (ToneDialService.EMERGENCY_999.equals(originalDestination)) {
+		if (ToneDialModel.EMERGENCY_999.equals(originalDestination)) {
 			return true;
 		}
 	
-		if (ToneDialService.EMERGENCY_911.equals(originalDestination)) {
+		if (ToneDialModel.EMERGENCY_911.equals(originalDestination)) {
 			return true;
 		}
 		return false;

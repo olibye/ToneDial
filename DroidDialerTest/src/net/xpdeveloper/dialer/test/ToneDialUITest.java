@@ -42,9 +42,7 @@ public class ToneDialUITest extends
 
 	}
 
-	public void testToneDial() {
-		ToneDialActivity unit = getActivity();
-		
+	public void testToneDial() {	
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));
 
