@@ -21,10 +21,10 @@
 		android:title="Help" android:summary="How to use tone dial."
 		android:defaultValue="100" />
 
-	<PreferenceScreen android:title="Web" android:summary="Visit the website">
+	<PreferenceScreen android:title="Web" android:summary="Visit the website to raise issues">
 
 		<intent android:action="android.intent.action.VIEW"
-			android:data="http://xpdeveloper.net" />
+			android:data="http://wiki.github.com/olibye/ToneDial/" />
 
 	</PreferenceScreen>
 
