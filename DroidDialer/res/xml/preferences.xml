@@ -17,16 +17,28 @@
 		android:title="@string/enable_tones_title" android:summaryOn="@string/enable_tones_summaryOn"
 		android:summaryOff="@string/enable_tones_summaryOff" />
 
+	<EditTextPreference android:key="country_code_edittext"
+		android:defaultValue="@string/default_value_country_code_preference"
+		android:title="@string/title_country_code_preference" android:summary="@string/summary_country_code_preference"
+		android:dialogTitle="@string/dialog_title_country_code_preference"
+		android:dialogMessage="@string/dialog_message_country_code_preference" />
+
+
+	<EditTextPreference android:key="trunk_code_edittext"
+		android:defaultValue="@string/default_value_trunk_code_preference"
+		android:title="@string/title_trunk_code_preference"
+		android:summary="@string/summary_trunk_code_preference"
+		android:dialogTitle="@string/dialog_title_trunk_code_preference"
+		android:dialogMessage="@string/dialog_message_trunk_code_preference" />
+
 	<net.xpdeveloper.dialer.ToneDialHelp
 		android:title="Help" android:summary="How to use tone dial."
 		android:defaultValue="100" />
 
-	<PreferenceScreen android:title="Web" android:summary="Visit the website to raise issues">
-
+	<PreferenceScreen android:title="Web"
+		android:summary="Visit the website to raise issues.">
 		<intent android:action="android.intent.action.VIEW"
 			android:data="http://wiki.github.com/olibye/ToneDial/" />
-
 	</PreferenceScreen>
-
 
 </PreferenceScreen>

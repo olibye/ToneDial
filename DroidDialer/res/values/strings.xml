@@ -2,13 +2,34 @@
 <resources>
 	<string name="app_name">Tone Dial</string>
 	<string name="button_contacts_name">Show Contacts</string>
-	<string name="enable_tones_title">Tone Dialing</string>
+
+	<!-- Preferences -->
+	<string name="enable_tones_title">Tone Dial</string>
 	<string name="enable_tones_summaryOn">Network dialing disabled</string>
-	<string name="enable_tones_summaryOff">Turn on Tone Dialing</string>
-	
+	<string name="enable_tones_summaryOff">Enable Tone Dial</string>
+
+	<string name="default_value_country_code_preference">+44</string>
+	<string name="title_country_code_preference">Country Code</string>
+	<string name="summary_country_code_preference">Replace +44 with Trunk Code</string>
+	<string name="dialog_title_country_code_preference">Country Code</string>
+	<string name="dialog_message_country_code_preference">I will replace your Country Code with the Trunk
+		Code.
+		Land line calls to dial people in this country do not use + or the country
+		code.</string>
+
+	<string name="default_value_trunk_code_preference">0</string>
+	<string name="title_trunk_code_preference">Trunk Code</string>
+	<string name="summary_trunk_code_preference">Country Code replaced by 0</string>
+	<string name="dialog_title_trunk_code_preference">Trunk Code</string>
+	<string name="dialog_message_trunk_code_preference">I will replace the country code with this Trunk
+		Code.
+		Land line calls to dial people in this country do not use + or the country
+		code.</string>
+
 	<!-- Notification strings -->
 	<string name="ticker_tone_dial_on">Tone Dialing On</string>
 	<string name="ticker_tone_dial_off">Tone Dialing Off</string>
 	<string name="notification_title">Tone Dialing</string>
-	<string name="notification_text">Call over a land line, Mobile dialing diabled.</string>
+	<string name="notification_text">Call over a land line, Mobile dialing diabled.
+	</string>
 </resources>
