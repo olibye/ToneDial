@@ -1,6 +1,5 @@
 package net.xpdeveloper.dialer.test;
 
-import net.xpdeveloper.dialer.NumberTweaker;
 import net.xpdeveloper.dialer.ToneDialModel;
 import net.xpdeveloper.dialer.ToneDialService;
 import android.test.ServiceTestCase;
@@ -27,12 +26,4 @@ public class ToneGeneratorTest extends ServiceTestCase<ToneDialService> {
 				.isEmergencyNumer("911"));
 	}
 
-	public void testSwapLocalCountryPrefixForSTDPrefix()
-			throws InterruptedException {
-		NumberTweaker unit = new NumberTweaker();
-		unit.addSwap("+44", "0");
-
-		assertEquals("Should not dial the country code for our country",
-				"01202", unit.tweak("+441202"));
-	}
 }

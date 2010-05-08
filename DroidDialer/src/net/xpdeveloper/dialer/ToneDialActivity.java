@@ -24,6 +24,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceChangeListener;
 
 /**
  * I am the UI. Since my persistence is simple preferences these are managed by
@@ -43,7 +44,7 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String EXTRA_COUNTRY_CODE = "net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE";
 	public static final String EXTRA_TRUNK_CODE = "net.xpdeveloper.dialer.EXTRA_TRUNK_CODE";
 
-	private static final String PREF_ENABLE_TONES = "enableTones";
+	public static final String PREF_ENABLE_TONES = "enableTones";
 
 	private IIntentHelper _intentHelper;
 
@@ -56,42 +57,58 @@ public class ToneDialActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 
+		// Add listeners
+		findPreference(PREF_ENABLE_TONES).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object value) {
+				enableService((Boolean)value);
+				return true; // means persist the value
+			}
+		});
+
+		OnPreferenceChangeListener codeChange = 
+		new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object value) {
+				firePreferenceChange();
+				return true; // means persist the value
+			}
+		};
+		
+		findPreference(EXTRA_COUNTRY_CODE).setOnPreferenceChangeListener(codeChange);
+		findPreference(EXTRA_TRUNK_CODE).setOnPreferenceChangeListener(codeChange);
+
 		// Start service if that was the previous preference
 		enableService(isServiceEnabled());
 	}
-
-	@Override
-	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-			Preference preference) {
-		boolean reply = super.onPreferenceTreeClick(preferenceScreen,
-				preference);
-
-		if (preference instanceof CheckBoxPreference) {
-			CheckBoxPreference enableCheckBox = (CheckBoxPreference) preference;
-			enableService(enableCheckBox.isChecked());
-		}
-
-		return reply;
-	}
-
+	
 	private String getEditTextPreference(String key) {
 		EditTextPreference preference = (EditTextPreference) findPreference(key);
 		return preference.getText();
 	}
 
-	public void enableService(boolean enableTones) {
-		Intent toneDial = new Intent(ACTION_PREFERENCE_CHANGE);
+	public void firePreferenceChange() {
+		Intent preferenceChange = new Intent(ACTION_PREFERENCE_CHANGE);
+		addCodes(preferenceChange);
+		_intentHelper.startService(preferenceChange);
+	}
 
-		toneDial.putExtra(EXTRA_COUNTRY_CODE,
-				getEditTextPreference(EXTRA_COUNTRY_CODE));
-		toneDial.putExtra(EXTRA_TRUNK_CODE,
-				getEditTextPreference(EXTRA_TRUNK_CODE));
+	public void enableService(boolean enableTones) {
+		Intent toneDial = new Intent(ToneDialService.ACTION_SERVICE_STATE_CHANGE);
+		addCodes(toneDial);
 
 		if (enableTones) {
 			_intentHelper.startService(toneDial);
 		} else {
 			_intentHelper.stopService(toneDial);
 		}
+	}
+
+	private void addCodes(Intent toneDial) {
+		toneDial.putExtra(EXTRA_COUNTRY_CODE,
+				getEditTextPreference(EXTRA_COUNTRY_CODE));
+		toneDial.putExtra(EXTRA_TRUNK_CODE,
+				getEditTextPreference(EXTRA_TRUNK_CODE));
 	}
 
 	public boolean isServiceEnabled() {

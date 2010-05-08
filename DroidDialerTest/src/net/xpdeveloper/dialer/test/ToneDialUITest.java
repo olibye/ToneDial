@@ -1,14 +1,17 @@
 package net.xpdeveloper.dialer.test;
 
-import java.util.ArrayList;
-
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.ToneDialService;
+
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+
 import android.content.Intent;
+import android.preference.EditTextPreference;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -16,6 +19,7 @@ public class ToneDialUITest extends
 		ActivityInstrumentationTestCase2<ToneDialActivity> {
 
 	private Solo _solo;
+	private Mockery _mockery = new Mockery();
 
 	/**
 	 * Tests require a default constructor
@@ -46,8 +50,7 @@ public class ToneDialUITest extends
 
 	/**
 	 * TODO consider using Expectation objects somehow. We need to check the
-	 * intent which gets very verbose in JMock.
-	 * Maybe I have to write a matcher
+	 * intent which gets very verbose in JMock. Maybe I have to write a matcher
 	 */
 	public void testEnableServiceRaisesStartServiceIntent() {
 
@@ -56,7 +59,7 @@ public class ToneDialUITest extends
 
 			@Override
 			public void startService(Intent intent) {
-				assertEquals(ToneDialActivity.ACTION_PREFERENCE_CHANGE, intent
+				assertEquals(ToneDialService.ACTION_SERVICE_STATE_CHANGE, intent
 						.getAction());
 				assertEquals("+44", intent
 						.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
@@ -68,25 +71,71 @@ public class ToneDialUITest extends
 			public void stopService(Intent intent) {
 				fail("Not expecting this");
 			}
-		};
+		}
+		;
 		MockIntentHelper mockIntentHelper = new MockIntentHelper();
 
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
+		
+		setupPreferences(unit);
+
+		// Can not change preferences directly from this thread
 		unit.enableService(true);
 
 		assertTrue("Is not satisfied", mockIntentHelper.isSatisfied);
 	}
 
-	public void testToneDial() {
-		assertTrue("Expecting the Tone Dial Page", _solo
-				.searchText("Tone Dial"));
+	private void setupPreferences(ToneDialActivity unit) {
+		EditTextPreference preference = (EditTextPreference) unit.findPreference(ToneDialActivity.EXTRA_COUNTRY_CODE);
+		assertNotNull("Could not find country code preference",preference);
+		preference.setText("+44");
+		EditTextPreference preferenceTrunk = (EditTextPreference) unit.findPreference(ToneDialActivity.EXTRA_TRUNK_CODE);
+		assertNotNull("Could not find trunk code preference",preferenceTrunk);
+		preferenceTrunk.setText("0");
+	}
 
-		ArrayList<Button> buttons = _solo.getCurrentButtons();
-		ArrayList<ListView> lists = _solo.getCurrentListViews();
-		ListView preferences = lists.get(0);
-		View enableRow = preferences.getChildAt(0);
-		_solo.clickOnScreen(enableRow);
+	public void testPreferenceChangeIntentOnCountryCodeChange() {
+		final IIntentHelper mockIntentHelper = _mockery
+				.mock(IIntentHelper.class);
+
+		class IntentMatcher extends BaseMatcher<Intent> {
+			public boolean matches(Object item) {
+				if (item instanceof Intent) {
+					Intent intent = (Intent) item;
+					assertEquals(ToneDialActivity.ACTION_PREFERENCE_CHANGE,
+							intent.getAction());
+					assertEquals(
+							"+44",
+							intent
+									.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
+					assertEquals("0", intent
+							.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE));
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Intent checking");
+			}
+		}
+
+		_mockery.checking(new Expectations() {
+			{
+				one(mockIntentHelper).startService(with(new IntentMatcher()));
+			}
+		});
+
+		ToneDialActivity unit = getActivity();
+		unit.setIIntentHelper(mockIntentHelper);
+
+		setupPreferences(unit);
+
+		unit.firePreferenceChange();
+
+		_mockery.assertIsSatisfied();
 	}
 
 }

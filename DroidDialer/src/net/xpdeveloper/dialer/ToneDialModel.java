@@ -17,8 +17,6 @@ import android.media.ToneGenerator;
  * BroadCastReceiver
  */
 public class ToneDialModel implements IToneDialModel {
-	public static final String ACTION_DIAL = "DIAL";
-	public static final String EXTRA_DTMF_DIALED = "DTMF_DIALED";
 
 	static final int TONE_DURATION = 120;
 	static final int TONE_PAUSE = 120;

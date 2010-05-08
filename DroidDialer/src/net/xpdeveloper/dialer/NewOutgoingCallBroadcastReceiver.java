@@ -46,7 +46,7 @@ public class NewOutgoingCallBroadcastReceiver extends BroadcastReceiver {
 	public static boolean invoke(Context context, String originalDestination) {
 		if (!ToneDialModel.isEmergencyNumer(originalDestination)) {
 			Intent dialIntent = new Intent(context, ToneDialService.class);
-			dialIntent.setAction(ToneDialModel.ACTION_DIAL);
+			dialIntent.setAction(ToneDialService.ACTION_DIAL);
 			dialIntent.setData(Uri.parse("tel:" + originalDestination));
 	
 			context.startService(dialIntent);

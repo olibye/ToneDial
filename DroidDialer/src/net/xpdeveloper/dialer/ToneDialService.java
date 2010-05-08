@@ -9,17 +9,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
 /**
  * I am started by the Launcher Activity when tone dialing is enabled.
  * 
- * I register a NewOutgoingCallBroadcastReciver to noify me when a number is
- * dialed. I capture this interation and send a dial command to my model
+ * I register a NewOutgoingCallBroadcastReciver to notify me when a number is
+ * dialed. I capture this iteration and send a dial command to my model
  */
 public class ToneDialService extends Service {
 	public static final String ACTION_DIAL = "net.xpdeveloper.dialer.DIAL";
+	public static final String ACTION_SERVICE_STATE_CHANGE = "net.xpdeveloper.dialer.SERVICE_STATE_CHANGE";
 
 	private static final int TONE_DIAL_SERVICE_TICKER_ID = 1;
 
@@ -29,6 +31,9 @@ public class ToneDialService extends Service {
 	// TODO I think the tone generator should go in the model, with a release on
 	// the model
 	private ToneGenerator _toneGenerator;
+
+	private String _countryCode = "";
+	private String _trunkCode = "";
 
 	/**
 	 * I'm needed by my unit tests
@@ -53,16 +58,30 @@ public class ToneDialService extends Service {
 
 		if (intent != null) {
 			// Have I been as
-			if (shouldToneDial(intent)) {
-				String originalDestination = intent.getDataString();
+			String action = intent.getAction();
+			if (ACTION_DIAL.equals(action)) {
+				Uri data = Uri.parse(intent.getDataString());
+				String originalDestination = data
+						.getEncodedSchemeSpecificPart();
 				toneDial(originalDestination);
-			} else {
-				// I've just been started
+			} else if (ToneDialActivity.ACTION_PREFERENCE_CHANGE.equals(action)) {
+				saveCodes(intent);
+			} else if (ACTION_SERVICE_STATE_CHANGE.equals(action)) {
+				saveCodes(intent);
 				displayNotification();
+			} else {
+				// ignore it
+				stopSelf();
 			}
 		}
 
 		return START_STICKY_COMPATIBILITY;
+	}
+
+	private void saveCodes(Intent intent) {
+		_countryCode = intent
+				.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE);
+		_trunkCode = intent.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE);
 	}
 
 	/**
@@ -82,18 +101,16 @@ public class ToneDialService extends Service {
 
 	private String adjustNumber(String originalDestination) {
 		String reply = originalDestination;
-		
-		if (originalDestination.startsWith("+")) {
-			if (originalDestination.startsWith("+1")) {
-				reply = originalDestination.substring(1);
-			}
-		}
-		
-		return reply;
-	}
 
-	private boolean shouldToneDial(Intent intent) {
-		return ACTION_DIAL.equals(intent.getAction());
+		if (originalDestination.startsWith(_countryCode)) {
+			StringBuffer replyBuffer = new StringBuffer();
+			replyBuffer.append(_trunkCode);
+			replyBuffer.append(originalDestination.substring(_countryCode
+					.length()));
+			reply = replyBuffer.toString();
+		}
+
+		return reply;
 	}
 
 	@Override
