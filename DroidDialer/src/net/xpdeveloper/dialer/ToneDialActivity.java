@@ -15,8 +15,9 @@
  */
 package net.xpdeveloper.dialer;
 
+import net.xpdeveloper.android.IIntentHelper;
+import net.xpdeveloper.android.IntentHelper;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -40,7 +41,12 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
 
 	private static final String PREF_ENABLE_TONES = "enableTones";
+	private IIntentHelper _intentHelper;
 
+	public ToneDialActivity() {
+		_intentHelper = new IntentHelper(this);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,5 +81,9 @@ public class ToneDialActivity extends PreferenceActivity {
 	public boolean isServiceEnabled() {
 		CheckBoxPreference enabled = (CheckBoxPreference) findPreference(PREF_ENABLE_TONES);
 		return enabled.isChecked();
+	}
+
+	public void setIIntentHelper(IIntentHelper intentHelper) {
+		_intentHelper  = intentHelper;
 	}
 }
