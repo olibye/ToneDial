@@ -42,6 +42,11 @@ public class ToneDialUITest extends
 
 	}
 
+	public void testEnableService() {
+		ToneDialActivity unit = getActivity();
+		unit.enableService(true);
+	}
+	
 	public void testToneDial() {	
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));

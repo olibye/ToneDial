@@ -19,7 +19,8 @@ import android.util.Log;
  * dialed. I capture this interation and send a dial command to my model
  */
 public class ToneDialService extends Service {
-	public static final String ACTION_DIAL = "DIAL";
+	public static final String ACTION_DIAL = "net.xpdeveloper.dialer.DIAL";
+
 	private static final int TONE_DIAL_SERVICE_TICKER_ID = 1;
 
 	private NewOutgoingCallBroadcastReceiver _receiver;

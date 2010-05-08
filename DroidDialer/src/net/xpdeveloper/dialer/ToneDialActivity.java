@@ -16,6 +16,7 @@
 package net.xpdeveloper.dialer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -23,6 +24,11 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 
 /**
+ * I am the UI. Since my persistence is simple preferences these are managed by
+ * my super class.
+ * 
+ * Reference:
+ * http://developer.android.com/reference/android/app/Activity.html#ActivityLifecycle
  * 
  * @author byeo
  * 
@@ -31,41 +37,43 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String TAG = "DroidDialer";
 	public static final String PREFS_NAME = "DroidDailer";
 
+	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
+
 	private static final String PREF_ENABLE_TONES = "enableTones";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-		
+
 		// Start service if that was the previous preference
 		enableService(isServiceEnabled());
 	}
 
 	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
 			Preference preference) {
-		boolean reply = super.onPreferenceTreeClick(preferenceScreen, preference);
-		
+		boolean reply = super.onPreferenceTreeClick(preferenceScreen,
+				preference);
+
 		if (preference instanceof CheckBoxPreference) {
-			CheckBoxPreference enableCheckBox = (CheckBoxPreference)preference;
+			CheckBoxPreference enableCheckBox = (CheckBoxPreference) preference;
 			enableService(enableCheckBox.isChecked());
 		}
-		
+
 		return reply;
 	}
 
 	public void enableService(boolean enableTones) {
-		Intent toneDial = new Intent(this, ToneDialService.class);
+		Intent toneDial = new Intent(ACTION_PREFERENCE_CHANGE);
 		if (enableTones) {
 			startService(toneDial);
-		}
-		else {
+		} else {
 			stopService(toneDial);
 		}
 	}
 
 	public boolean isServiceEnabled() {
-		CheckBoxPreference enabled = (CheckBoxPreference)findPreference(PREF_ENABLE_TONES);
+		CheckBoxPreference enabled = (CheckBoxPreference) findPreference(PREF_ENABLE_TONES);
 		return enabled.isChecked();
 	}
 }
