@@ -15,9 +15,6 @@ import com.jayway.android.robotium.solo.Solo;
 public class ToneDialUITest extends
 		ActivityInstrumentationTestCase2<ToneDialActivity> {
 
-	public static final String EXTRA_COUNTRY_CODE = "net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE";
-	public static final String EXTRA_TRUNK_CODE = "net.xpdeveloper.dialer.EXTRA_TRUNK_CODE";
-	
 	private Solo _solo;
 
 	/**
@@ -47,21 +44,38 @@ public class ToneDialUITest extends
 
 	}
 
+	/**
+	 * TODO consider using Expectation objects somehow. We need to check the
+	 * intent which gets very verbose in JMock.
+	 * Maybe I have to write a matcher
+	 */
 	public void testEnableServiceRaisesStartServiceIntent() {
-		
-		final IIntentHelper mockIntentHelper = new IIntentHelper() {
+
+		class MockIntentHelper implements IIntentHelper {
+			boolean isSatisfied = false;
+
 			@Override
 			public void startService(Intent intent) {
-				assertEquals(ToneDialActivity.ACTION_PREFERENCE_CHANGE,intent.getAction());
-				assertEquals("+44", intent.getStringExtra(EXTRA_COUNTRY_CODE));
-				assertEquals("+44", intent.getStringExtra(EXTRA_TRUNK_CODE));
+				assertEquals(ToneDialActivity.ACTION_PREFERENCE_CHANGE, intent
+						.getAction());
+				assertEquals("+44", intent
+						.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
+				assertEquals("0", intent
+						.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE));
+				isSatisfied = true;
+			}
+
+			public void stopService(Intent intent) {
+				fail("Not expecting this");
 			}
 		};
+		MockIntentHelper mockIntentHelper = new MockIntentHelper();
 
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
 		unit.enableService(true);
 
+		assertTrue("Is not satisfied", mockIntentHelper.isSatisfied);
 	}
 
 	public void testToneDial() {

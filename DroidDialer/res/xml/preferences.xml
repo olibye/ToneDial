@@ -17,14 +17,14 @@
 		android:title="@string/enable_tones_title" android:summaryOn="@string/enable_tones_summaryOn"
 		android:summaryOff="@string/enable_tones_summaryOff" />
 
-	<EditTextPreference android:key="country_code_edittext"
+	<EditTextPreference android:key="net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE"
 		android:defaultValue="@string/default_value_country_code_preference"
 		android:title="@string/title_country_code_preference" android:summary="@string/summary_country_code_preference"
 		android:dialogTitle="@string/dialog_title_country_code_preference"
 		android:dialogMessage="@string/dialog_message_country_code_preference"
 		android:inputType="phone"/>
 
-	<EditTextPreference android:key="trunk_code_edittext"
+	<EditTextPreference android:key="net.xpdeveloper.dialer.EXTRA_TRUNK_CODE"
 		android:defaultValue="@string/default_value_trunk_code_preference"
 		android:title="@string/title_trunk_code_preference"
 		android:summary="@string/summary_trunk_code_preference"

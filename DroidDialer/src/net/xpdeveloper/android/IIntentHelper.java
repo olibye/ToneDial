@@ -11,4 +11,6 @@ import android.content.Intent;
  */
 public interface IIntentHelper {
 	public void startService(Intent intent);
+
+	public void stopService(Intent intent);
 }

@@ -24,4 +24,9 @@ public class IntentHelper implements IIntentHelper {
 		_context.startService(intent);
 	}
 
+	@Override
+	public void stopService(Intent intent) {
+		_context.stopService(intent);
+	}
+
 }
