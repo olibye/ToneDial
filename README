@@ -1,0 +1,21 @@
+A DTFM Tone Dial Android™ Application
+
+This is our first Android Application, it aims to provide a simple tool
+that will allow you to dial a contact from your mobile using a landline.
+
+Tone Dial is an exercise for us to learn about Android
+It aims to exercise the following:
+- Automated Testing
+-- How easy is it to automate Unit and Functional tests
+
+- Simple Activity
+-- Persistent preferences
+
+- BroadCastReceiver to catch Dial events from the contact list
+
+- Icons
+-- Can a non artist use GIMP to make icons
+
+- Model View Presenter pattern
+-- View events appear to be like MVP interactions sent from Views
+-- Intents appear to be like MVP commands sent from the Presenter
