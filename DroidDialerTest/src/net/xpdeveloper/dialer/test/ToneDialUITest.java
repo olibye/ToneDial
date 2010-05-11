@@ -72,7 +72,7 @@ public class ToneDialUITest extends
 				fail("Not expecting this");
 			}
 		}
-		;
+		
 		MockIntentHelper mockIntentHelper = new MockIntentHelper();
 
 		ToneDialActivity unit = getActivity();

@@ -12,6 +12,7 @@ import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * I am started by the Launcher Activity when tone dialing is enabled.
@@ -68,7 +69,8 @@ public class ToneDialService extends Service {
 				saveCodes(intent);
 			} else if (ACTION_SERVICE_STATE_CHANGE.equals(action)) {
 				saveCodes(intent);
-				displayNotification();
+				displayNotification(getText(R.string.ticker_tone_dial_on),
+						getText(R.string.notification_text));
 			} else {
 				// ignore it
 				stopSelf();
@@ -92,6 +94,9 @@ public class ToneDialService extends Service {
 	public String toneDial(String originalDestination) {
 		String dialString = adjustNumber(originalDestination);
 		try {
+			displayNotification(
+					getText(R.string.ticker_tone_dial) + dialString,
+					getText(R.string.notification_text_tone_dial) + dialString);
 			_model.dial(dialString, _toneGenerator);
 		} catch (InterruptedException e) {
 			Log.e(ToneDialActivity.TAG, "Unable to generate DTMF tones", e);
@@ -161,10 +166,15 @@ public class ToneDialService extends Service {
 
 	/**
 	 * http://developer.android.com/guide/topics/ui/notifiers/notifications.html
+	 * 
+	 * @param contentText
+	 *            TODO
+	 * @param contentText
+	 *            TODO
 	 */
-	private void displayNotification() {
+	private void displayNotification(CharSequence tickerText,
+			CharSequence contentText) {
 		int icon = R.drawable.stat_service;
-		CharSequence tickerText = getText(R.string.ticker_tone_dial_on);
 
 		Notification notification = new Notification(icon, tickerText, 0);
 		// We will cancel this notification
@@ -179,7 +189,6 @@ public class ToneDialService extends Service {
 		// Build the notifications
 		Context context = getApplicationContext();
 		CharSequence contentTitle = getText(R.string.notification_title);
-		CharSequence contentText = getText(R.string.notification_text);
 		notification.setLatestEventInfo(context, contentTitle, contentText,
 				contentIntent);
 
