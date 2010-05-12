@@ -15,6 +15,8 @@
  */
 package net.xpdeveloper.dialer;
 
+import java.text.MessageFormat;
+
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.android.IntentHelper;
 import android.content.Intent;
@@ -23,8 +25,10 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.provider.Contacts;
+import android.provider.ContactsContract;
 
 /**
  * I am the UI. Since my persistence is simple preferences these are managed by
@@ -40,6 +44,7 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String TAG = "DroidDialer";
 	public static final String PREFS_NAME = "DroidDailer";
 
+	public static final String PREF_CONTACTS = "net.xpdeveloper.dialer.PREF_CONTACTS";
 	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
 	public static final String EXTRA_COUNTRY_CODE = "net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE";
 	public static final String EXTRA_TRUNK_CODE = "net.xpdeveloper.dialer.EXTRA_TRUNK_CODE";
@@ -47,7 +52,8 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String PREF_ENABLE_TONES = "enableTones";
 
 	private IIntentHelper _intentHelper;
-
+	private MessageFormat countrySummaryFormat, trunkSummaryFormat;
+	
 	public ToneDialActivity() {
 		_intentHelper = new IntentHelper(this);
 	}
@@ -57,6 +63,9 @@ public class ToneDialActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 
+		countrySummaryFormat = new MessageFormat(getText(R.string.summary_country_code_preference).toString());
+		trunkSummaryFormat = new MessageFormat(getText(R.string.summary_trunk_code_preference).toString());
+		
 		// Add listeners
 		findPreference(PREF_ENABLE_TONES).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -65,21 +74,43 @@ public class ToneDialActivity extends PreferenceActivity {
 				return true; // means persist the value
 			}
 		});
-
-		OnPreferenceChangeListener codeChange = 
+		
+		OnPreferenceChangeListener countryCodeChange = 
 		new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object value) {
 				firePreferenceChange();
+				setSummary(preference, countrySummaryFormat, value);
 				return true; // means persist the value
 			}
 		};
 		
-		findPreference(EXTRA_COUNTRY_CODE).setOnPreferenceChangeListener(codeChange);
-		findPreference(EXTRA_TRUNK_CODE).setOnPreferenceChangeListener(codeChange);
+		OnPreferenceChangeListener trunkCodeChange = 
+			new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object value) {
+					firePreferenceChange();
+					setSummary(preference, trunkSummaryFormat, value);
+					return true; // means persist the value
+				}
+			};
 
-		// Start service if that was the previous preference
-		enableService(isServiceEnabled());
+		EditTextPreference countryPreference = (EditTextPreference)findPreference(EXTRA_COUNTRY_CODE);
+		countryPreference.setOnPreferenceChangeListener(countryCodeChange);
+		setSummary(countryPreference, countrySummaryFormat, countryPreference.getText());
+
+		EditTextPreference trunkPreference = (EditTextPreference)findPreference(EXTRA_TRUNK_CODE);
+		trunkPreference.setOnPreferenceChangeListener(trunkCodeChange);
+		setSummary(trunkPreference, trunkSummaryFormat, trunkPreference.getText());
+		
+		enableService(true);
+	}
+	
+	private void setSummary(Preference pref, MessageFormat format, Object code) {
+		if(code.toString().length() == 0) {
+			code = "nothing";
+		}
+		pref.setSummary(format.format(new Object[]{code}));
 	}
 	
 	private String getEditTextPreference(String key) {

@@ -10,8 +10,12 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.preference.EditTextPreference;
+import android.provider.Contacts;
+import android.provider.ContactsContract;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -59,8 +63,8 @@ public class ToneDialUITest extends
 
 			@Override
 			public void startService(Intent intent) {
-				assertEquals(ToneDialService.ACTION_SERVICE_STATE_CHANGE, intent
-						.getAction());
+				assertEquals(ToneDialService.ACTION_SERVICE_STATE_CHANGE,
+						intent.getAction());
 				assertEquals("+44", intent
 						.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
 				assertEquals("0", intent
@@ -72,13 +76,13 @@ public class ToneDialUITest extends
 				fail("Not expecting this");
 			}
 		}
-		
+
 		MockIntentHelper mockIntentHelper = new MockIntentHelper();
 
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
-		
-		setupPreferences(unit);
+
+		setupPreferences(unit, "+44", "0");
 
 		// Can not change preferences directly from this thread
 		unit.enableService(true);
@@ -86,13 +90,18 @@ public class ToneDialUITest extends
 		assertTrue("Is not satisfied", mockIntentHelper.isSatisfied);
 	}
 
-	private void setupPreferences(ToneDialActivity unit) {
-		EditTextPreference preference = (EditTextPreference) unit.findPreference(ToneDialActivity.EXTRA_COUNTRY_CODE);
-		assertNotNull("Could not find country code preference",preference);
-		preference.setText("+44");
-		EditTextPreference preferenceTrunk = (EditTextPreference) unit.findPreference(ToneDialActivity.EXTRA_TRUNK_CODE);
-		assertNotNull("Could not find trunk code preference",preferenceTrunk);
-		preferenceTrunk.setText("0");
+	private void setupPreferences(ToneDialActivity unit, String countryCode, String trunkCode) {
+		setPreference(unit, countryCode, ToneDialActivity.EXTRA_COUNTRY_CODE);
+		setPreference(unit, trunkCode, ToneDialActivity.EXTRA_TRUNK_CODE);
+	}
+
+	private void setPreference(ToneDialActivity unit, String code, String key) {
+		EditTextPreference preference = (EditTextPreference) unit
+				.findPreference(key);
+		assertNotNull("Could not find preference:" + key, preference);
+		Editor editor = preference.getEditor();
+		editor.putString(key, code);
+		editor.commit();
 	}
 
 	public void testPreferenceChangeIntentOnCountryCodeChange() {
@@ -131,11 +140,42 @@ public class ToneDialUITest extends
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
 
-		setupPreferences(unit);
+		setupPreferences(unit, "+44", "0");
 
 		unit.firePreferenceChange();
 
 		_mockery.assertIsSatisfied();
 	}
 
+	public void testCountryCodeSummaryChange() {
+		assertTrue("Expecting the Tone Dial Page", _solo
+				.searchText("Tone Dial"));
+
+		ToneDialActivity unit = getActivity();
+		setupPreferences(unit, "+44", "0");
+
+		_solo.clickOnText("Country Code");
+		_solo.enterText(0, "+1");
+		_solo.clickOnButton(0);
+		assertTrue("Should change country code summary", _solo
+				.searchText("Replace +1 with Trunk Code"));
+	}
+
+	public void testTrunkCodeSummaryChange() {
+		assertTrue("Expecting the Tone Dial Page", _solo
+				.searchText("Tone Dial"));
+
+		ToneDialActivity unit = getActivity();
+		setupPreferences(unit, "", "");
+		
+		_solo.clickOnText("Trunk Code");
+		_solo.enterText(0, "1-");
+		_solo.clickOnButton(0);
+		assertTrue("Should change trunk code summary", _solo
+				.searchText("Country Code replaced by 1-"));
+	}
+	
+	public void testContactsURI() {
+		assertEquals("content://contacts", Contacts.CONTENT_URI.toString());
+	}
 }

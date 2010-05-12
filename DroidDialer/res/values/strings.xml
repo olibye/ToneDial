@@ -10,7 +10,7 @@
 
 	<string name="default_value_country_code_preference">+44</string>
 	<string name="title_country_code_preference">Country Code</string>
-	<string name="summary_country_code_preference">Replace +44 with Trunk Code</string>
+	<string name="summary_country_code_preference">Replace {0} with Trunk Code</string>
 	<string name="dialog_title_country_code_preference">Country Code</string>
 	<string name="dialog_message_country_code_preference">I will replace your Country Code with the Trunk
 		Code.
@@ -19,7 +19,7 @@
 
 	<string name="default_value_trunk_code_preference">0</string>
 	<string name="title_trunk_code_preference">Trunk Code</string>
-	<string name="summary_trunk_code_preference">Country Code replaced by 0</string>
+	<string name="summary_trunk_code_preference">Country Code replaced by {0}</string>
 	<string name="dialog_title_trunk_code_preference">Trunk Code</string>
 	<string name="dialog_message_trunk_code_preference">I will replace the country code with this Trunk
 		Code.

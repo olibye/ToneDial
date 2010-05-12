@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.xpdeveloper.dialer" android:versionCode="3"
-	android:versionName="0.003">
+	package="net.xpdeveloper.dialer" android:versionCode="4"
+	android:versionName="0.004">
 
 	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
@@ -24,9 +24,9 @@
 
 	</application>
 
-	<!-- Required for robotium testing -->
+	<!-- Required for robotium testing
+ 	-->
 	<uses-permission android:name="android.permission.GET_TASKS" />
-
 
 	<!-- Lower this when tested -->
 	<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7" />
