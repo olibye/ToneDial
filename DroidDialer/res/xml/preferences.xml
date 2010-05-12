@@ -34,7 +34,7 @@
 	<PreferenceScreen android:key="net.xpdeveloper.dialer.PREF_CONTACTS"
 		android:title="Contacts" android:summary="Choose a contact to dial.">
 		<intent android:action="android.intent.action.VIEW"
-			android:data="content://contacts" />
+			android:data="content://contacts/people" />
 	</PreferenceScreen>
 
 	<PreferenceScreen android:key="net.xpdeveloper.dialer.WEB"
