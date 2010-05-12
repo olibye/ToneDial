@@ -103,7 +103,7 @@ public class ToneDialActivity extends PreferenceActivity {
 		trunkPreference.setOnPreferenceChangeListener(trunkCodeChange);
 		setSummary(trunkPreference, trunkSummaryFormat, trunkPreference.getText());
 		
-		enableService(true);
+		enableService(isServiceEnabled());
 	}
 	
 	private void setSummary(Preference pref, MessageFormat format, Object code) {
