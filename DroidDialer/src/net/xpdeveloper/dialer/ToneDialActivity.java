@@ -102,6 +102,14 @@ public class ToneDialActivity extends PreferenceActivity {
 		EditTextPreference trunkPreference = (EditTextPreference)findPreference(EXTRA_TRUNK_CODE);
 		trunkPreference.setOnPreferenceChangeListener(trunkCodeChange);
 		setSummary(trunkPreference, trunkSummaryFormat, trunkPreference.getText());
+
+		findPreference(PREF_CONTACTS).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				getApplicationContext().startActivity(new Intent(Intent.ACTION_VIEW,Contacts.CONTENT_URI));
+				return true;
+			}
+		});
 		
 		enableService(true);
 	}

@@ -22,18 +22,23 @@
 		android:title="@string/title_country_code_preference" android:summary="@string/summary_country_code_preference"
 		android:dialogTitle="@string/dialog_title_country_code_preference"
 		android:dialogMessage="@string/dialog_message_country_code_preference"
-		android:inputType="phone"/>
+		android:inputType="phone" />
 
 	<EditTextPreference android:key="net.xpdeveloper.dialer.EXTRA_TRUNK_CODE"
 		android:defaultValue="@string/default_value_trunk_code_preference"
-		android:title="@string/title_trunk_code_preference"
-		android:summary="@string/summary_trunk_code_preference"
+		android:title="@string/title_trunk_code_preference" android:summary="@string/summary_trunk_code_preference"
 		android:dialogTitle="@string/dialog_title_trunk_code_preference"
 		android:dialogMessage="@string/dialog_message_trunk_code_preference"
-		android:inputType="phone"/>
+		android:inputType="phone" />
 
-	<PreferenceScreen android:title="Web"
-		android:summary="Visit the website to raise issues.">
+	<PreferenceScreen android:key="net.xpdeveloper.dialer.PREF_CONTACTS"
+		android:title="Contacts" android:summary="Choose a contact to dial.">
+		<intent android:action="android.intent.action.VIEW"
+			android:data="content://contacts" />
+	</PreferenceScreen>
+
+	<PreferenceScreen android:key="net.xpdeveloper.dialer.WEB"
+		android:title="Web" android:summary="Visit the website to raise issues.">
 		<intent android:action="android.intent.action.VIEW"
 			android:data="http://wiki.github.com/olibye/ToneDial/" />
 	</PreferenceScreen>
