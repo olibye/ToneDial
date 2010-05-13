@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>DroidDialerTest</name>
+	<name>ToneDial</name>
 	<comment></comment>
 	<projects>
-		<project>DroidDialer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
