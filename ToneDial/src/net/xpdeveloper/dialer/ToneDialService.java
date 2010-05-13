@@ -12,7 +12,6 @@ import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * I am started by the Launcher Activity when tone dialing is enabled.

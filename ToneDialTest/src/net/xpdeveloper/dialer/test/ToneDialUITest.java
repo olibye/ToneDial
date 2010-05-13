@@ -13,9 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.preference.EditTextPreference;
 import android.provider.Contacts;
-import android.provider.ContactsContract;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -156,7 +154,7 @@ public class ToneDialUITest extends
 
 		_solo.clickOnText("Country Code");
 		_solo.enterText(0, "+1");
-		_solo.clickOnButton(0);
+		_solo.clickOnText("OK");
 		assertTrue("Should change country code summary", _solo
 				.searchText("Replace +1 with Trunk Code"));
 	}
@@ -170,7 +168,7 @@ public class ToneDialUITest extends
 		
 		_solo.clickOnText("Trunk Code");
 		_solo.enterText(0, "1-");
-		_solo.clickOnButton(0);
+		_solo.clickOnText("OK");
 		assertTrue("Should change trunk code summary", _solo
 				.searchText("Country Code replaced by 1-"));
 	}

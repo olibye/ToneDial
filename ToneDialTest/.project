@@ -3,7 +3,7 @@
 	<name>ToneDialTest</name>
 	<comment></comment>
 	<projects>
-		<project>DroidDialer</project>
+		<project>ToneDial</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

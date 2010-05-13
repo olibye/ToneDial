@@ -26,9 +26,6 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.provider.Contacts;
-import android.provider.ContactsContract;
 
 /**
  * I am the UI. Since my persistence is simple preferences these are managed by
@@ -41,8 +38,7 @@ import android.provider.ContactsContract;
  * 
  */
 public class ToneDialActivity extends PreferenceActivity {
-	public static final String TAG = "DroidDialer";
-	public static final String PREFS_NAME = "DroidDailer";
+	public static final String TAG = "ToneDial";
 
 	public static final String PREF_CONTACTS = "net.xpdeveloper.dialer.PREF_CONTACTS";
 	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
