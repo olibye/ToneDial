@@ -138,9 +138,7 @@ public class ToneDialUITest extends
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
 
-		setupPreferences(unit, "+44", "0");
-
-		unit.firePreferenceChange(getEditTextPreference(EXTRA_COUNTRY_CODE), getEditTextPreference(EXTRA_TRUNK_CODE));
+		unit.firePreferenceChange("+44", "0");
 
 		_mockery.assertIsSatisfied();
 	}
