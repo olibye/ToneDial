@@ -140,7 +140,7 @@ public class ToneDialUITest extends
 
 		setupPreferences(unit, "+44", "0");
 
-		unit.firePreferenceChange();
+		unit.firePreferenceChange(getEditTextPreference(EXTRA_COUNTRY_CODE), getEditTextPreference(EXTRA_TRUNK_CODE));
 
 		_mockery.assertIsSatisfied();
 	}

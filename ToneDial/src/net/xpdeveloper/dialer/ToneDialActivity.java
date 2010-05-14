@@ -75,7 +75,7 @@ public class ToneDialActivity extends PreferenceActivity {
 		new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object value) {
-				firePreferenceChange();
+				firePreferenceChange(value.toString(), getEditTextPreference(EXTRA_TRUNK_CODE));
 				setSummary(preference, countrySummaryFormat, value);
 				return true; // means persist the value
 			}
@@ -85,7 +85,7 @@ public class ToneDialActivity extends PreferenceActivity {
 			new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object value) {
-					firePreferenceChange();
+					firePreferenceChange(getEditTextPreference(EXTRA_COUNTRY_CODE), value.toString());
 					setSummary(preference, trunkSummaryFormat, value);
 					return true; // means persist the value
 				}
@@ -114,9 +114,12 @@ public class ToneDialActivity extends PreferenceActivity {
 		return preference.getText();
 	}
 
-	public void firePreferenceChange() {
+	public void firePreferenceChange(String countryCode, String trunkCode) {
 		Intent preferenceChange = new Intent(ACTION_PREFERENCE_CHANGE);
-		addCodes(preferenceChange);
+		preferenceChange.putExtra(EXTRA_COUNTRY_CODE,
+				countryCode);
+		preferenceChange.putExtra(EXTRA_TRUNK_CODE,
+				trunkCode);
 		_intentHelper.startService(preferenceChange);
 	}
 
