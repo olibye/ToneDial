@@ -33,6 +33,7 @@ public class ToneDialUITest extends
 
 	@Override
 	public void setUp() throws Exception {
+		super.setUp();
 		_solo = new Solo(getInstrumentation(), getActivity());
 	}
 
@@ -152,7 +153,7 @@ public class ToneDialUITest extends
 
 		_solo.clickOnText("Country Code");
 		_solo.enterText(0, "+1");
-		_solo.clickOnText("OK");
+		_solo.clickOnButton("OK");
 		assertTrue("Should change country code summary", _solo
 				.searchText("Replace +1 with Trunk Code"));
 	}
@@ -166,7 +167,7 @@ public class ToneDialUITest extends
 		
 		_solo.clickOnText("Trunk Code");
 		_solo.enterText(0, "1-");
-		_solo.clickOnText("OK");
+		_solo.clickOnButton("OK");
 		assertTrue("Should change trunk code summary", _solo
 				.searchText("Country Code replaced by 1-"));
 	}

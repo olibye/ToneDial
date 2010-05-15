@@ -6,7 +6,7 @@
 	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
 	<application android:label="@string/app_name"
-		android:debuggable="false" android:icon="@drawable/ic_launcher">
+		android:debuggable="true" android:icon="@drawable/ic_launcher">
 
 		<activity android:label="@string/app_name" android:name=".ToneDialActivity">
 			<intent-filter>
@@ -24,11 +24,10 @@
 
 	</application>
 
-	<!-- Required for robotium testing
+	<!-- Required for robotium testing -->
 	<uses-permission android:name="android.permission.GET_TASKS" />
- 	-->
 
 	<!-- Lower this when tested -->
-	<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7" />
+	<uses-sdk android:targetSdkVersion="4" android:minSdkVersion="4" />
 
 </manifest> 
