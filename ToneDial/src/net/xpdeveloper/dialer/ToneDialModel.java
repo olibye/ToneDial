@@ -27,17 +27,16 @@ public class ToneDialModel implements IToneDialModel {
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
 
-	public void dial(String dialString, ToneGenerator toneGenerator)
+	synchronized public void dial(String dialString, ToneGenerator toneGenerator)
 			throws InterruptedException {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
-			// Pause longer for the first tone
+			// Pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			char digit = dialString.charAt(0);
-			dial(digit, TONE_PAUSE * 2, toneGenerator);
+			wait(TONE_PAUSE);
 
-			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
+			for (int digitIndex = 0; digitIndex < digitCount; digitIndex++) {
 				dial(dialString.charAt(digitIndex), TONE_PAUSE, toneGenerator);
 			}
 		}
