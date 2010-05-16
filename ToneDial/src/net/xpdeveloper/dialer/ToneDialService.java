@@ -54,7 +54,7 @@ public class ToneDialService extends Service {
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public void onStart(Intent intent, int flags) {
 
 		if (intent != null) {
 			// Have I been as
@@ -75,8 +75,6 @@ public class ToneDialService extends Service {
 				stopSelf();
 			}
 		}
-
-		return START_STICKY_COMPATIBILITY;
 	}
 
 	private void saveCodes(Intent intent) {
@@ -120,8 +118,10 @@ public class ToneDialService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		_toneGenerator = new ToneGenerator(AudioManager.STREAM_DTMF, 80);
+		
+		// AudioManager.STREAM_DTMF on API 7
+		// http://developer.android.com/reference/android/media/ToneGenerator.html#ToneGenerator(int, int)
+		_toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 80);
 
 		manageRegistration(true);
 	}

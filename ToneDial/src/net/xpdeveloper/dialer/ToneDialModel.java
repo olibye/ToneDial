@@ -49,12 +49,16 @@ public class ToneDialModel implements IToneDialModel {
 		if (Character.isDigit(digit)) {
 			// ignore non digits
 
-			// wait before tone as this helps a sleeping amp wake up
-			// last pause isn't needed
-			wait(TONE_DURATION + pause);
-
 			int numericValue = Character.getNumericValue(digit);
-			toneGenerator.startTone(toneCodes[numericValue], TONE_DURATION);
+			toneGenerator.startTone(toneCodes[numericValue]);
+
+			// Wait after tone start to support Donut which lacks
+			// startTone( , duration) method
+			wait(TONE_DURATION);
+			toneGenerator.stopTone();
+			
+			// Pause for to pronounce duplicate keys
+			wait(pause);
 		}
 
 		if (Character.isSpace(digit)) {
@@ -73,7 +77,7 @@ public class ToneDialModel implements IToneDialModel {
 		if (ToneDialModel.EMERGENCY_999.equals(originalDestination)) {
 			return true;
 		}
-	
+
 		if (ToneDialModel.EMERGENCY_911.equals(originalDestination)) {
 			return true;
 		}

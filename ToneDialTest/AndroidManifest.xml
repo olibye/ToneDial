@@ -12,6 +12,6 @@
 		android:name="android.test.InstrumentationTestRunner" />
 
 	<!-- Lower this when tested -->
-	<uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7" />
+	<uses-sdk android:targetSdkVersion="4" android:minSdkVersion="4" />
 
 </manifest> 
