@@ -11,6 +11,7 @@ import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
 import android.media.ToneGenerator;
+import android.util.Log;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
@@ -32,11 +33,11 @@ public class ToneDialModel implements IToneDialModel {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
-			// Pause before for the first tone
+			// Double pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			wait(TONE_PAUSE);
+			dial(dialString.charAt(0), TONE_PAUSE*3, toneGenerator);
 
-			for (int digitIndex = 0; digitIndex < digitCount; digitIndex++) {
+			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
 				dial(dialString.charAt(digitIndex), TONE_PAUSE, toneGenerator);
 			}
 		}
@@ -48,16 +49,22 @@ public class ToneDialModel implements IToneDialModel {
 		if (Character.isDigit(digit)) {
 			// ignore non digits
 
+			// Pause for to pronounce duplicate keys
+			// Pause at start to give amp time to power up
+			wait(pause);
+
 			int numericValue = Character.getNumericValue(digit);
 			toneGenerator.startTone(toneCodes[numericValue]);
 
 			// Wait after tone start to support Donut which lacks
 			// startTone( , duration) method
+			try {
 			wait(TONE_DURATION);
-			toneGenerator.stopTone();
-			
-			// Pause for to pronounce duplicate keys
-			wait(pause);
+			}
+			catch (InterruptedException ie) {
+				Log.i(ToneDialActivity.TAG, "Interrupted waiting to stop dial tone.", ie);
+			}
+			toneGenerator.stopTone();			
 		}
 
 		if (Character.isSpace(digit)) {
