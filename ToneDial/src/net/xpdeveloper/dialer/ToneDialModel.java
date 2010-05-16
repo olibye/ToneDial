@@ -27,17 +27,16 @@ public class ToneDialModel implements IToneDialModel {
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
 
-	public void dial(String dialString, ToneGenerator toneGenerator)
+	synchronized public void dial(String dialString, ToneGenerator toneGenerator)
 			throws InterruptedException {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
-			// Pause longer for the first tone
+			// Pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			char digit = dialString.charAt(0);
-			dial(digit, TONE_PAUSE * 2, toneGenerator);
+			wait(TONE_PAUSE);
 
-			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
+			for (int digitIndex = 0; digitIndex < digitCount; digitIndex++) {
 				dial(dialString.charAt(digitIndex), TONE_PAUSE, toneGenerator);
 			}
 		}
@@ -49,12 +48,16 @@ public class ToneDialModel implements IToneDialModel {
 		if (Character.isDigit(digit)) {
 			// ignore non digits
 
-			// wait before tone as this helps a sleeping amp wake up
-			// last pause isn't needed
-			wait(TONE_DURATION + pause);
-
 			int numericValue = Character.getNumericValue(digit);
-			toneGenerator.startTone(toneCodes[numericValue], TONE_DURATION);
+			toneGenerator.startTone(toneCodes[numericValue]);
+
+			// Wait after tone start to support Donut which lacks
+			// startTone( , duration) method
+			wait(TONE_DURATION);
+			toneGenerator.stopTone();
+			
+			// Pause for to pronounce duplicate keys
+			wait(pause);
 		}
 
 		if (Character.isSpace(digit)) {
@@ -73,7 +76,7 @@ public class ToneDialModel implements IToneDialModel {
 		if (ToneDialModel.EMERGENCY_999.equals(originalDestination)) {
 			return true;
 		}
-	
+
 		if (ToneDialModel.EMERGENCY_911.equals(originalDestination)) {
 			return true;
 		}

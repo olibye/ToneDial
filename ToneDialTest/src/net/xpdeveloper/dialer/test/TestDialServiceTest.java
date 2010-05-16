@@ -39,12 +39,12 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 		unit.setModel(mockModel);
 
 		// It appears to handle the start elsewhere, so call again
-		unit.onStartCommand(intent, 0, 0);
+		unit.onStart(intent, 0);
 		
 		Intent dialIntent = new Intent();
 		dialIntent.setAction(ToneDialService.ACTION_DIAL);
 		dialIntent.setData(Uri.parse("tel:+441202123456"));
-		unit.onStartCommand(dialIntent, 0, 0); // startService doesn't appear to
+		unit.onStart(dialIntent, 0); // startService doesn't appear to
 		// work twice
 
 		_mockery.assertIsSatisfied();

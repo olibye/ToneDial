@@ -88,7 +88,8 @@ public class ToneDialUITest extends
 		assertTrue("Is not satisfied", mockIntentHelper.isSatisfied);
 	}
 
-	private void setupPreferences(ToneDialActivity unit, String countryCode, String trunkCode) {
+	private void setupPreferences(ToneDialActivity unit, String countryCode,
+			String trunkCode) {
 		setPreference(unit, countryCode, ToneDialActivity.EXTRA_COUNTRY_CODE);
 		setPreference(unit, trunkCode, ToneDialActivity.EXTRA_TRUNK_CODE);
 	}
@@ -163,14 +164,14 @@ public class ToneDialUITest extends
 
 		ToneDialActivity unit = getActivity();
 		setupPreferences(unit, "", "");
-		
+
 		_solo.clickOnText("Trunk Code");
 		_solo.enterText(0, "1-");
 		_solo.clickOnText("OK");
 		assertTrue("Should change trunk code summary", _solo
 				.searchText("Country Code replaced by 1-"));
 	}
-	
+
 	public void testContactsURI() {
 		assertEquals("content://contacts", Contacts.CONTENT_URI.toString());
 	}
