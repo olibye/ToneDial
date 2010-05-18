@@ -25,5 +25,4 @@ public class ToneGeneratorTest extends ServiceTestCase<ToneDialService> {
 		assertTrue("Should not dial 999", ToneDialModel
 				.isEmergencyNumer("911"));
 	}
-
 }

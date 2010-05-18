@@ -15,62 +15,53 @@ import android.util.Log;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
- * BroadCastReceiver
+ * BroadCastReceiver. My implementations handle the API differences
  */
-public class ToneDialModel implements IToneDialModel {
+public abstract class ToneDialModel implements IToneDialModel {
 
-	static final int TONE_DURATION = 120;
+	protected static final int TONE_DURATION = 120;
 	static final int TONE_PAUSE = 120;
 
-	static final int[] toneCodes = new int[] { TONE_DTMF_0, TONE_DTMF_1,
-			TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5, TONE_DTMF_6,
-			TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
+	protected static final int[] toneCodes = new int[] { TONE_DTMF_0,
+			TONE_DTMF_1, TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5,
+			TONE_DTMF_6, TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
 
-	synchronized public void dial(String dialString, ToneGenerator toneGenerator)
+	public final void dial(String dialString, ToneGenerator toneGenerator)
 			throws InterruptedException {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
 			// Double pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			dial(dialString.charAt(0), TONE_PAUSE*3, toneGenerator);
+			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3,
+					toneGenerator);
 
 			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
-				dial(dialString.charAt(digitIndex), TONE_PAUSE, toneGenerator);
+				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE,
+						toneGenerator);
 			}
 		}
 
 	}
 
-	synchronized void dial(final char digit, final int pause,
+	final void dialDigitOrPause(final char digit, final int pause,
 			final ToneGenerator toneGenerator) throws InterruptedException {
+
 		if (Character.isDigit(digit)) {
 			// ignore non digits
-
-			// Pause for to pronounce duplicate keys
-			// Pause at start to give amp time to power up
-			wait(pause);
-
-			int numericValue = Character.getNumericValue(digit);
-			toneGenerator.startTone(toneCodes[numericValue]);
-
-			// Wait after tone start to support Donut which lacks
-			// startTone( , duration) method
-			try {
-			wait(TONE_DURATION);
-			}
-			catch (InterruptedException ie) {
-				Log.i(ToneDialActivity.TAG, "Interrupted waiting to stop dial tone.", ie);
-			}
-			toneGenerator.stopTone();			
+			dialDigit(digit, pause, toneGenerator);
 		}
 
 		if (Character.isSpace(digit)) {
 			wait(TONE_DURATION + pause);
 		}
+
 	}
+
+	protected abstract void dialDigit(char digit, int pause,
+			ToneGenerator toneGenerator) throws InterruptedException;
 
 	/**
 	 * Provide a way to filter out Emergency numbers We should not stop the

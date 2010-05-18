@@ -1,5 +1,6 @@
 package net.xpdeveloper.dialer;
 
+import net.xpdeveloper.dialer.api4.ToneDialModelAPI4;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,7 +46,7 @@ public class ToneDialService extends Service {
 	}
 
 	public ToneDialService() {
-		this(new ToneDialModel());
+		this(new ToneDialModelAPI4());
 	}
 
 	@Override
