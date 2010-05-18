@@ -8,7 +8,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 
 import android.content.Intent;
-import android.media.ToneGenerator;
 import android.net.Uri;
 import android.test.ServiceTestCase;
 
