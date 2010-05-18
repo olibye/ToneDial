@@ -1,14 +1,21 @@
 package net.xpdeveloper.dialer;
 
-import android.media.ToneGenerator;
 
 public interface IToneDialModel {
 
 	/**
 	 * 
-	 * @param dialString the tones to dial (including " " and "-" for pauses
-	 * @param toneGenerator passed in as we do not want to hold the resources for ever
-	 * @throws InterruptedException because we Object.wait() for tones to play.
+	 * @param dialString
+	 *            the tones to dial (including " " and "-" for pauses
+	 * @throws InterruptedException
+	 *             because we Object.wait() for tones to play.
 	 */
-	public void dial(String dialString, ToneGenerator toneGenerator) throws InterruptedException;
+	public void dial(String dialString)
+			throws InterruptedException;
+
+	/**
+	 * Free up OS resources, e.g. the internal ToneGenerator that my
+	 * implementation is highly likely to contain
+	 */
+	public void release();
 }

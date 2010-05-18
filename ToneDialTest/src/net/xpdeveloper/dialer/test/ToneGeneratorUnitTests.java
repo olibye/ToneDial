@@ -3,8 +3,6 @@ package net.xpdeveloper.dialer.test;
 import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.ToneDialModel;
 import net.xpdeveloper.dialer.api4.ToneDialModelAPI4;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.test.ActivityUnitTestCase;
 
 /**
@@ -19,12 +17,10 @@ public class ToneGeneratorUnitTests extends ActivityUnitTestCase<ToneDialActivit
 	}
 	
 	public void testToneDialModelMakesNoise() throws InterruptedException {
-		ToneDialModel unit = new ToneDialModelAPI4();
+		ToneDialModel unit = new ToneDialModelAPI4(80);
 		
-		ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_MUSIC, 50);
-		unit.dial("0123456789", tg);
-		
-		tg.release();
+		unit.dial("0123456789");
+		unit.release();
 	}
 
 }

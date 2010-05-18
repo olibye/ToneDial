@@ -10,8 +10,6 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import android.media.ToneGenerator;
-import android.util.Log;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
@@ -28,30 +26,27 @@ public abstract class ToneDialModel implements IToneDialModel {
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
 
-	public final void dial(String dialString, ToneGenerator toneGenerator)
-			throws InterruptedException {
+	public final void dial(String dialString) throws InterruptedException {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
 			// Double pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3,
-					toneGenerator);
+			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3);
 
 			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
-				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE,
-						toneGenerator);
+				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE);
 			}
 		}
 
 	}
 
-	final void dialDigitOrPause(final char digit, final int pause,
-			final ToneGenerator toneGenerator) throws InterruptedException {
+	final void dialDigitOrPause(final char digit, final int pause)
+			throws InterruptedException {
 
 		if (Character.isDigit(digit)) {
 			// ignore non digits
-			dialDigit(digit, pause, toneGenerator);
+			dialDigit(digit, pause);
 		}
 
 		if (Character.isSpace(digit)) {
@@ -60,8 +55,8 @@ public abstract class ToneDialModel implements IToneDialModel {
 
 	}
 
-	protected abstract void dialDigit(char digit, int pause,
-			ToneGenerator toneGenerator) throws InterruptedException;
+	protected abstract void dialDigit(char digit, int pause)
+			throws InterruptedException;
 
 	/**
 	 * Provide a way to filter out Emergency numbers We should not stop the

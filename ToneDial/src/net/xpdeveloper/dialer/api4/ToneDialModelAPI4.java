@@ -1,7 +1,8 @@
 package net.xpdeveloper.dialer.api4;
 
-import android.media.ToneGenerator;
 import net.xpdeveloper.dialer.ToneDialModel;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 
 /**
  * I implement the ToneDial model using the API4 ToneGenerator API API4 does not
@@ -13,20 +14,32 @@ import net.xpdeveloper.dialer.ToneDialModel;
  * 
  */
 public class ToneDialModelAPI4 extends ToneDialModel {
-
-	protected synchronized void dialDigit(final char digit, final int pause,
-			final ToneGenerator toneGenerator) throws InterruptedException {
+	private ToneGenerator _toneGenerator;
+	
+	public ToneDialModelAPI4(int volume) {
+		// AudioManager.STREAM_DTMF on API 7
+		// http://developer.android.com/reference/android/media/ToneGenerator.html#ToneGenerator(int, int)
+		_toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, volume);
+	}
+	
+	@Override
+	protected synchronized void dialDigit(final char digit, final int pause) throws InterruptedException {
 				// Pause for to pronounce duplicate keys
 				// Pause at start to give amp time to power up
 				wait(pause);
 			
 				int numericValue = Character.getNumericValue(digit);
-				toneGenerator.startTone(toneCodes[numericValue]);
+				_toneGenerator.startTone(toneCodes[numericValue]);
 			
 				// Wait after tone start to support Donut which lacks
 				// startTone( , duration) method
 				wait(TONE_DURATION);
-				toneGenerator.stopTone();
+				_toneGenerator.stopTone();
 			}
+
+	@Override
+	public void release() {
+		_toneGenerator.release();
+	}
 
 }

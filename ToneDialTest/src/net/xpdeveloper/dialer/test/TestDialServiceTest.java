@@ -24,8 +24,7 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 
 		_mockery.checking(new Expectations() {
 			{
-				one(mockModel).dial(with("01202123456"),
-						with(any(ToneGenerator.class)));
+				one(mockModel).dial("01202123456");
 			}
 		});
 

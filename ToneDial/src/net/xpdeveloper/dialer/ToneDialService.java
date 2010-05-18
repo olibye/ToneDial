@@ -8,8 +8,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
@@ -29,10 +27,6 @@ public class ToneDialService extends Service {
 	private NewOutgoingCallBroadcastReceiver _receiver;
 	private IToneDialModel _model;
 
-	// TODO I think the tone generator should go in the model, with a release on
-	// the model
-	private ToneGenerator _toneGenerator;
-
 	private String _countryCode = "";
 	private String _trunkCode = "";
 
@@ -46,7 +40,7 @@ public class ToneDialService extends Service {
 	}
 
 	public ToneDialService() {
-		this(new ToneDialModelAPI4());
+		this(new ToneDialModelAPI4(80));
 	}
 
 	@Override
@@ -95,7 +89,7 @@ public class ToneDialService extends Service {
 			displayNotification(
 					getText(R.string.ticker_tone_dial) + dialString,
 					getText(R.string.notification_text_tone_dial) + dialString);
-			_model.dial(dialString, _toneGenerator);
+			_model.dial(dialString);
 		} catch (InterruptedException e) {
 			Log.e(ToneDialActivity.TAG, "Unable to generate DTMF tones", e);
 		}
@@ -120,17 +114,13 @@ public class ToneDialService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		// AudioManager.STREAM_DTMF on API 7
-		// http://developer.android.com/reference/android/media/ToneGenerator.html#ToneGenerator(int, int)
-		_toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 80);
-
 		manageRegistration(true);
 	}
 
 	@Override
 	public void onDestroy() {
 		manageRegistration(false);
-		_toneGenerator.release();
+		_model.release();
 		cancelNotification();
 
 		super.onDestroy();
