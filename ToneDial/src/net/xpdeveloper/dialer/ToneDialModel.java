@@ -10,6 +10,10 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
+import android.media.ToneGenerator;
+import android.os.Build;
+import net.xpdeveloper.dialer.api1.ToneDialModelAPI1;
+import net.xpdeveloper.dialer.api5.ToneDialModelAPI5;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
@@ -25,7 +29,7 @@ public abstract class ToneDialModel implements IToneDialModel {
 			TONE_DTMF_6, TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
-
+	
 	public final void dial(String dialString) throws InterruptedException {
 		int digitCount = dialString.length();
 
@@ -74,5 +78,21 @@ public abstract class ToneDialModel implements IToneDialModel {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Build the correct Model for this SDK version
+	 * @param buildSDKVersion
+	 * @return
+	 */
+	public static ToneDialModel buildModel(int buildSDKVersion) {
+		if (buildSDKVersion < 5) {
+			return new ToneDialModelAPI1();
+		}
+		return new ToneDialModelAPI5();
+	}
+
+	public static ToneDialModel buildModel() {
+		return buildModel(Build.VERSION.SDK_INT);
 	}
 }

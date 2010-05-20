@@ -1,4 +1,4 @@
-package net.xpdeveloper.dialer.api4;
+package net.xpdeveloper.dialer.api1;
 
 import net.xpdeveloper.dialer.ToneDialModel;
 import android.media.AudioManager;
@@ -13,11 +13,14 @@ import android.media.ToneGenerator;
  * @author byeo
  * 
  */
-public class ToneDialModelAPI4 extends ToneDialModel {
+public class ToneDialModelAPI1 extends ToneDialModel {
 	private ToneGenerator _toneGenerator;
 	
-	public ToneDialModelAPI4(int volume) {
-		// AudioManager.STREAM_DTMF on API 7
+	public ToneDialModelAPI1() {
+		this(80);
+	}
+	
+	public ToneDialModelAPI1(int volume) {
 		// http://developer.android.com/reference/android/media/ToneGenerator.html#ToneGenerator(int, int)
 		_toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, volume);
 	}
