@@ -23,7 +23,7 @@ public class ToneGeneratorUnitTests extends
 	public void testToneDialModelMakesNoise() throws InterruptedException {
 		ToneDialModel unit = ToneDialModel.buildModel();
 
-		unit.dial("0123456789");
+		unit.dial("0-123-45-6789");
 		unit.release();
 	}
 

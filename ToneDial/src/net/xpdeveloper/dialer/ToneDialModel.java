@@ -34,18 +34,22 @@ public abstract class ToneDialModel implements IToneDialModel {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
-			// Double pause before for the first tone
+			// Big pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
 			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3);
 
 			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
 				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE);
 			}
+
+			// Pause to make sure this app doesn't quit before the tone is finished
+			// For example when running in tests
+			dialDigitOrPause(' ', TONE_PAUSE);
 		}
 
 	}
 
-	final void dialDigitOrPause(final char digit, final int pause)
+	synchronized final void dialDigitOrPause(final char digit, final int pause)
 			throws InterruptedException {
 
 		if (Character.isDigit(digit)) {
