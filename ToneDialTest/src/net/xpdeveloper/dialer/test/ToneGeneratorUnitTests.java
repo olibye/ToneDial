@@ -35,17 +35,17 @@ public class ToneGeneratorUnitTests extends
 		checkVersionBuildsClassOrThrowsVerify(4, ToneDialModelAPI1.class,false);
 		
 		boolean shouldThrowVerifyError = Build.VERSION.SDK_INT < 5;
-		checkVersionBuildsClassOrThrowsVerify(5, ToneDialModelAPI1.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(6, ToneDialModelAPI1.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(7, ToneDialModelAPI1.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(8, ToneDialModelAPI1.class,shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(5, ToneDialModelAPI5.class,shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(6, ToneDialModelAPI5.class,shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(7, ToneDialModelAPI5.class,shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(8, ToneDialModelAPI5.class,shouldThrowVerifyError);
 	}
 
 	private void checkVersionBuildsClassOrThrowsVerify(int sdkVersion,
 			Class clazz, boolean shouldThrow) {
 		try {
 			assertEquals("Expecting a model for SDK level " + sdkVersion,
-					clazz, ToneDialModel.buildModel(1).getClass());
+					clazz, ToneDialModel.buildModel(sdkVersion).getClass());
 		} catch (Throwable t) {
 			if (shouldThrow) {
 				assertEquals("Expecting a verify error", VerifyError.class, t

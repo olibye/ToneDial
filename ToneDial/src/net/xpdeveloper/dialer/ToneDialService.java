@@ -1,6 +1,5 @@
 package net.xpdeveloper.dialer;
 
-import net.xpdeveloper.dialer.api1.ToneDialModelAPI1;
 import net.xpdeveloper.dialer.api5.ToneDialModelAPI5;
 import android.app.Notification;
 import android.app.NotificationManager;

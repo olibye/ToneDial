@@ -10,10 +10,9 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import android.media.ToneGenerator;
-import android.os.Build;
 import net.xpdeveloper.dialer.api1.ToneDialModelAPI1;
 import net.xpdeveloper.dialer.api5.ToneDialModelAPI5;
+import android.os.Build;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
