@@ -96,6 +96,6 @@ public abstract class ToneDialModel implements IToneDialModel {
 	}
 
 	public static ToneDialModel buildModel() {
-		return buildModel(Build.VERSION.SDK_INT);
+		return buildModel(Integer.parseInt(Build.VERSION.SDK));
 	}
 }
