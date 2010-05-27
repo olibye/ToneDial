@@ -18,12 +18,17 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 		super(ToneDialService.class);
 	}
 
+	
+	
 	public void testUsesCountryAndTrunkCode() throws InterruptedException {
 		final IToneDialModel mockModel = _mockery.mock(IToneDialModel.class);
 
 		_mockery.checking(new Expectations() {
 			{
 				one(mockModel).dial("01202123456");
+				
+				// Ignore or expections are thrown teardown when the service is shutdown
+				ignoring(mockModel).release(); 
 			}
 		});
 

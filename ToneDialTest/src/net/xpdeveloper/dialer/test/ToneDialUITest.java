@@ -1,5 +1,7 @@
 package net.xpdeveloper.dialer.test;
 
+import java.util.ArrayList;
+
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.ToneDialService;
@@ -12,8 +14,13 @@ import org.jmock.Mockery;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceGroup;
 import android.provider.Contacts;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -63,10 +70,6 @@ public class ToneDialUITest extends
 			public void startService(Intent intent) {
 				assertEquals(ToneDialService.ACTION_SERVICE_STATE_CHANGE,
 						intent.getAction());
-				assertEquals("+44", intent
-						.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
-				assertEquals("0", intent
-						.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE));
 				isSatisfied = true;
 			}
 
@@ -79,8 +82,6 @@ public class ToneDialUITest extends
 
 		ToneDialActivity unit = getActivity();
 		unit.setIIntentHelper(mockIntentHelper);
-
-		setupPreferences(unit, "+44", "0");
 
 		// Can not change preferences directly from this thread
 		unit.enableService(true);
@@ -148,28 +149,30 @@ public class ToneDialUITest extends
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));
 
-		ToneDialActivity unit = getActivity();
-		setupPreferences(unit, "+44", "0");
-
-		_solo.clickOnText("Country Code");
+		_solo.clickInList(3);
+		_solo.clearEditText(0);
 		_solo.enterText(0, "+1");
 		_solo.clickOnText("OK");
-		assertTrue("Should change country code summary", _solo
-				.searchText("Replace +1 with Trunk Code"));
+		
+		ArrayList<ListView> lists = _solo.getCurrentListViews();
+		ListAdapter preferences = lists.get(0).getAdapter();
+		Preference preference = (Preference)preferences.getItem(1);
+		assertEquals("Summary didn't change", "Replace +1 with Trunk Code",preference.getSummary()); 
 	}
 
 	public void testTrunkCodeSummaryChange() {
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));
 
-		ToneDialActivity unit = getActivity();
-		setupPreferences(unit, "", "");
-
-		_solo.clickOnText("Trunk Code");
-		_solo.enterText(0, "1-");
+		_solo.clickInList(4);
+		_solo.clearEditText(0);
+		_solo.enterText(0, "0");
 		_solo.clickOnText("OK");
-		assertTrue("Should change trunk code summary", _solo
-				.searchText("Country Code replaced by 1-"));
+		
+		ArrayList<ListView> lists = _solo.getCurrentListViews();
+		ListAdapter preferences = lists.get(0).getAdapter();
+		Preference preference = (Preference)preferences.getItem(2);
+		assertEquals("Summary didn't change", "Country Code replaced by 0",preference.getSummary()); 
 	}
 
 	public void testContactsURI() {
