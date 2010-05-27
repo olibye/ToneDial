@@ -10,6 +10,8 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
+import static android.media.ToneGenerator.TONE_DTMF_P;
+import static android.media.ToneGenerator.TONE_DTMF_S;
 import net.xpdeveloper.dialer.api1.ToneDialModelAPI1;
 import net.xpdeveloper.dialer.api5.ToneDialModelAPI5;
 import android.os.Build;
@@ -28,7 +30,7 @@ public abstract class ToneDialModel implements IToneDialModel {
 			TONE_DTMF_6, TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
-	
+
 	public final void dial(String dialString) throws InterruptedException {
 		int digitCount = dialString.length();
 
@@ -41,7 +43,8 @@ public abstract class ToneDialModel implements IToneDialModel {
 				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE);
 			}
 
-			// Pause to make sure this app doesn't quit before the tone is finished
+			// Pause to make sure this app doesn't quit before the tone is
+			// finished
 			// For example when running in tests
 			dialDigitOrPause(' ', TONE_PAUSE);
 		}
@@ -56,10 +59,12 @@ public abstract class ToneDialModel implements IToneDialModel {
 			dialDigit(digit, pause);
 		}
 
-		if (Character.isSpace(digit)) {
+		if (Character.isWhitespace(digit)) {
 			wait(TONE_DURATION + pause);
 		}
 
+		// TODO dialTone * and # pull up ToneGenerator into IToneGenerator with
+		// API1 API5 wrappers
 	}
 
 	protected abstract void dialDigit(char digit, int pause)
@@ -85,6 +90,7 @@ public abstract class ToneDialModel implements IToneDialModel {
 
 	/**
 	 * Build the correct Model for this SDK version
+	 * 
 	 * @param buildSDKVersion
 	 * @return
 	 */

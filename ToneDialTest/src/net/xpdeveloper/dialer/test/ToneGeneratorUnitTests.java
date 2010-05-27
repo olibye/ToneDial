@@ -23,7 +23,7 @@ public class ToneGeneratorUnitTests extends
 	public void testToneDialModelMakesNoise() throws InterruptedException {
 		ToneDialModel unit = ToneDialModel.buildModel();
 
-		unit.dial("0-123-45-6789");
+		unit.dial("0-123-45-6789#*");
 		unit.release();
 	}
 
@@ -42,7 +42,7 @@ public class ToneGeneratorUnitTests extends
 	}
 
 	private void checkVersionBuildsClassOrThrowsVerify(int sdkVersion,
-			Class clazz, boolean shouldThrow) {
+			Class<?> clazz, boolean shouldThrow) {
 		try {
 			assertEquals("Expecting a model for SDK level " + sdkVersion,
 					clazz, ToneDialModel.buildModel(sdkVersion).getClass());
