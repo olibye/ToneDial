@@ -53,8 +53,11 @@ public class ToneDialUITest extends
 			e.printStackTrace();
 		}
 		getActivity().finish();
+		
+		// Setback for UK for my everyday use!
+		setupPreferences(getActivity(), "+44", "0");
+		
 		super.tearDown();
-
 	}
 
 	/**
@@ -149,14 +152,14 @@ public class ToneDialUITest extends
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));
 
-		_solo.clickInList(3);
+		_solo.clickInList(5);
 		_solo.clearEditText(0);
 		_solo.enterText(0, "+1");
 		_solo.clickOnText("OK");
 		
 		ArrayList<ListView> lists = _solo.getCurrentListViews();
 		ListAdapter preferences = lists.get(0).getAdapter();
-		Preference preference = (Preference)preferences.getItem(1);
+		Preference preference = (Preference)preferences.getItem(2);
 		assertEquals("Summary didn't change", "Replace +1 with Trunk Code",preference.getSummary()); 
 	}
 
@@ -164,14 +167,14 @@ public class ToneDialUITest extends
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial"));
 
-		_solo.clickInList(4);
+		_solo.clickInList(7);
 		_solo.clearEditText(0);
 		_solo.enterText(0, "0");
 		_solo.clickOnText("OK");
 		
 		ArrayList<ListView> lists = _solo.getCurrentListViews();
 		ListAdapter preferences = lists.get(0).getAdapter();
-		Preference preference = (Preference)preferences.getItem(2);
+		Preference preference = (Preference)preferences.getItem(3);
 		assertEquals("Summary didn't change", "Country Code replaced by 0",preference.getSummary()); 
 	}
 

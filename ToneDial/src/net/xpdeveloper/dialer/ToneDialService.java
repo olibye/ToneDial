@@ -22,8 +22,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -40,6 +43,7 @@ public class ToneDialService extends Service {
 
 	private NewOutgoingCallBroadcastReceiver _receiver;
 	private IToneDialModel _model;
+	private boolean _stopped = false;
 
 	private String _countryCode = "";
 	private String _trunkCode = "";
@@ -65,14 +69,24 @@ public class ToneDialService extends Service {
 	@Override
 	public void onStart(Intent intent, int flags) {
 
-		if (intent != null) {
-			// Have I been as
+		if (intent != null && _stopped == false) {
 			String action = intent.getAction();
 			if (ACTION_DIAL.equals(action)) {
 				Uri data = Uri.parse(intent.getDataString());
 				String originalDestination = data
 						.getEncodedSchemeSpecificPart();
 				toneDial(originalDestination);
+				
+				if (shouldDialOnlyOnce()) {
+					_stopped = true;
+					
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+					Editor editor = prefs.edit();
+					editor.putBoolean(ToneDialActivity.PREF_ENABLE_TONES, false);
+					editor.commit();
+					 
+					stopSelf();					
+				}
 			} else if (ToneDialActivity.ACTION_PREFERENCE_CHANGE.equals(action)) {
 				saveCodes(intent);
 			} else if (ACTION_SERVICE_STATE_CHANGE.equals(action)) {
@@ -81,9 +95,15 @@ public class ToneDialService extends Service {
 						getText(R.string.notification_text));
 			} else {
 				// ignore it
+				_stopped = true;
 				stopSelf();
 			}
 		}
+	}
+
+	private boolean shouldDialOnlyOnce() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		return prefs.getBoolean(ToneDialActivity.PREF_ENABLE_TONES_ONCE, false);
 	}
 
 	private void saveCodes(Intent intent) {

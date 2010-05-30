@@ -17,6 +17,10 @@
 		android:title="@string/enable_tones_title" android:summaryOn="@string/enable_tones_summaryOn"
 		android:summaryOff="@string/enable_tones_summaryOff" />
 
+	<CheckBoxPreference android:key="enableTonesOnce"
+		android:title="@string/enable_tones_once_title" android:summaryOn="@string/enable_tones_once_summaryOn"
+		android:summaryOff="@string/enable_tones_once_summaryOff" />
+
 	<EditTextPreference android:key="net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE"
 		android:defaultValue="@string/default_value_country_code_preference"
 		android:title="@string/title_country_code_preference" android:summary="@string/summary_country_code_preference"
@@ -32,15 +36,15 @@
 		android:inputType="phone" />
 
 	<PreferenceScreen android:key="net.xpdeveloper.dialer.PREF_CONTACTS"
-		android:title="Contacts" android:summary="Choose a contact to dial.">
+		android:title="Contacts" android:summary="Choose a contact to dial">
 		<intent android:action="android.intent.action.VIEW"
 			android:data="content://contacts/people" />
 	</PreferenceScreen>
 
 	<PreferenceScreen android:key="net.xpdeveloper.dialer.WEB"
-		android:title="Web" android:summary="Visit the website to raise issues.">
+		android:title="Web" android:summary="Visit the website to raise issues">
 		<intent android:action="android.intent.action.VIEW"
-			android:data="http://wiki.github.com/olibye/ToneDial/" />
+			android:data="http://code.google.com/p/tonedial/issues/list" />
 	</PreferenceScreen>
 
 </PreferenceScreen>

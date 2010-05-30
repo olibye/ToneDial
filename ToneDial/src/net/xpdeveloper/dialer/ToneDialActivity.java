@@ -40,12 +40,13 @@ import android.preference.Preference.OnPreferenceChangeListener;
 public class ToneDialActivity extends PreferenceActivity {
 	public static final String TAG = "ToneDial";
 
-	public static final String PREF_CONTACTS = "net.xpdeveloper.dialer.PREF_CONTACTS";
 	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
 	public static final String EXTRA_COUNTRY_CODE = "net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE";
 	public static final String EXTRA_TRUNK_CODE = "net.xpdeveloper.dialer.EXTRA_TRUNK_CODE";
 
 	public static final String PREF_ENABLE_TONES = "enableTones";
+	public static final String PREF_ENABLE_TONES_ONCE = "enableTonesOnce";
+	public static final String PREF_CONTACTS = "net.xpdeveloper.dialer.PREF_CONTACTS";
 
 	private IIntentHelper _intentHelper;
 	private MessageFormat countrySummaryFormat, trunkSummaryFormat;

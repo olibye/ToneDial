@@ -8,6 +8,10 @@
 	<string name="enable_tones_summaryOn">Network dialing disabled</string>
 	<string name="enable_tones_summaryOff">Enable Tone Dial</string>
 
+	<string name="enable_tones_once_title">Only Once</string>
+	<string name="enable_tones_once_summaryOn">Return to network dialing after one tone dial</string>
+	<string name="enable_tones_once_summaryOff">Return to network dialing after one tone dial</string>
+
 	<string name="default_value_country_code_preference">+44</string>
 	<string name="title_country_code_preference">Country Code</string>
 	<string name="summary_country_code_preference">Replace {0} with Trunk Code</string>
