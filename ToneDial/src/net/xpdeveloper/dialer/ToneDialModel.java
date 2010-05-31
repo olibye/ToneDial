@@ -25,28 +25,37 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import static android.media.ToneGenerator.TONE_DTMF_P;
-import static android.media.ToneGenerator.TONE_DTMF_S;
-import net.xpdeveloper.dialer.api1.ToneDialModelAPI1;
-import net.xpdeveloper.dialer.api5.ToneDialModelAPI5;
+import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
+import android.media.ToneGenerator;
 import android.os.Build;
 
 /**
  * I generate DTMF tones. They may be sent to me from a GUI or a
  * BroadCastReceiver. My implementations handle the API differences
  */
-public abstract class ToneDialModel implements IToneDialModel {
+public class ToneDialModel implements IToneDialModel {
 
-	protected static final int TONE_DURATION = 120;
-	static final int TONE_PAUSE = 120;
+	public static final int TONE_PAUSE = 150;
 
 	protected static final int[] toneCodes = new int[] { TONE_DTMF_0,
 			TONE_DTMF_1, TONE_DTMF_2, TONE_DTMF_3, TONE_DTMF_4, TONE_DTMF_5,
 			TONE_DTMF_6, TONE_DTMF_7, TONE_DTMF_8, TONE_DTMF_9 };
+
 	public static final String EMERGENCY_999 = "999";
 	public static final String EMERGENCY_911 = "911";
 
-	public final void dial(String dialString) throws InterruptedException {
+	private IToneGeneratorStrategy _toneGeneratorStrategy;
+
+	public ToneDialModel(IToneGeneratorStrategy strategy) {
+		_toneGeneratorStrategy = strategy;
+	}
+
+	public ToneDialModel() {
+		this(buildModel());
+	}
+
+	public void dial(String dialString) throws InterruptedException {
 		int digitCount = dialString.length();
 
 		if (digitCount > 0) {
@@ -66,25 +75,37 @@ public abstract class ToneDialModel implements IToneDialModel {
 
 	}
 
-	synchronized final void dialDigitOrPause(final char digit, final int pause)
+	/*
+	 * TODO needs a hash lookup table
+	 */
+	synchronized void dialDigitOrPause(final char digit, final int pause)
 			throws InterruptedException {
 
 		if (Character.isDigit(digit)) {
 			// ignore non digits
 			int numericValue = Character.getNumericValue(digit);
-			dialDigit(toneCodes[numericValue], pause);
+			_toneGeneratorStrategy.generateTone(toneCodes[numericValue], pause);
 		}
 
-		if (Character.isWhitespace(digit)) {
-			wait(TONE_DURATION + pause);
+		if (Character.isWhitespace(digit) || '-' == digit) {
+			wait(pause * 2);
 		}
 
-		// TODO dialTone * and # pull up ToneGenerator into IToneGenerator with
-		// API1 API5 wrappers
+		if ('#' == digit) {
+			_toneGeneratorStrategy.generateTone(ToneGenerator.TONE_DTMF_P,
+					pause);
+		}
+
+		if ('*' == digit) {
+			_toneGeneratorStrategy.generateTone(ToneGenerator.TONE_DTMF_S,
+					pause);
+		}
 	}
 
-	protected abstract void dialDigit(int dtmfCode, int pause)
-			throws InterruptedException;
+	@Override
+	public void release() {
+		_toneGeneratorStrategy.release();
+	}
 
 	/**
 	 * Provide a way to filter out Emergency numbers We should not stop the
@@ -110,14 +131,14 @@ public abstract class ToneDialModel implements IToneDialModel {
 	 * @param buildSDKVersion
 	 * @return
 	 */
-	public static ToneDialModel buildModel(int buildSDKVersion) {
+	public static IToneGeneratorStrategy buildModel(int buildSDKVersion) {
 		if (buildSDKVersion < 5) {
-			return new ToneDialModelAPI1();
+			return new API1ToneGeneratorStrategy();
 		}
-		return new ToneDialModelAPI5();
+		return new API5ToneGeneratorStrategy();
 	}
 
-	public static ToneDialModel buildModel() {
+	public static IToneGeneratorStrategy buildModel() {
 		return buildModel(Integer.parseInt(Build.VERSION.SDK));
 	}
 }

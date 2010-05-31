@@ -58,7 +58,7 @@ public class ToneDialService extends Service {
 	}
 
 	public ToneDialService() {
-		this(ToneDialModel.buildModel());
+		this(new ToneDialModel());
 	}
 
 	@Override
