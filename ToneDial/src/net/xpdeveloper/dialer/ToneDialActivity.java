@@ -25,6 +25,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 
 /**
@@ -49,8 +50,9 @@ public class ToneDialActivity extends PreferenceActivity {
 	public static final String PREF_CONTACTS = "net.xpdeveloper.dialer.PREF_CONTACTS";
 
 	private IIntentHelper _intentHelper;
-	private MessageFormat countrySummaryFormat, trunkSummaryFormat;
-	
+	private MessageFormat _countrySummaryFormat, _trunkSummaryFormat;
+	private CheckBoxPreference _enabledPreference;
+
 	public ToneDialActivity() {
 		_intentHelper = new IntentHelper(this);
 	}
@@ -60,56 +62,76 @@ public class ToneDialActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 
-		countrySummaryFormat = new MessageFormat(getText(R.string.summary_country_code_preference).toString());
-		trunkSummaryFormat = new MessageFormat(getText(R.string.summary_trunk_code_preference).toString());
+		_countrySummaryFormat = new MessageFormat(getText(
+				R.string.summary_country_code_preference).toString());
+		_trunkSummaryFormat = new MessageFormat(getText(
+				R.string.summary_trunk_code_preference).toString());
+
+		_enabledPreference = (CheckBoxPreference) findPreference(PREF_ENABLE_TONES);
 		
 		// Add listeners
-		findPreference(PREF_ENABLE_TONES).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		_enabledPreference.setOnPreferenceChangeListener(
+				new OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object value) {
+						enableService((Boolean) value);
+						return true; // means persist the value
+					}
+				});
+
+		OnPreferenceChangeListener countryCodeChange = new OnPreferenceChangeListener() {
 			@Override
-			public boolean onPreferenceChange(Preference preference, Object value) {
-				enableService((Boolean)value);
-				return true; // means persist the value
-			}
-		});
-		
-		OnPreferenceChangeListener countryCodeChange = 
-		new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object value) {
-				firePreferenceChange(value.toString(), getEditTextPreference(EXTRA_TRUNK_CODE));
-				setSummary(preference, countrySummaryFormat, value);
+			public boolean onPreferenceChange(Preference preference,
+					Object value) {
+				firePreferenceChange(value.toString(),
+						getEditTextPreference(EXTRA_TRUNK_CODE));
+				setSummary(preference, _countrySummaryFormat, value);
 				return true; // means persist the value
 			}
 		};
-		
-		OnPreferenceChangeListener trunkCodeChange = 
-			new OnPreferenceChangeListener() {
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object value) {
-					firePreferenceChange(getEditTextPreference(EXTRA_COUNTRY_CODE), value.toString());
-					setSummary(preference, trunkSummaryFormat, value);
-					return true; // means persist the value
-				}
-			};
 
-		EditTextPreference countryPreference = (EditTextPreference)findPreference(EXTRA_COUNTRY_CODE);
+		OnPreferenceChangeListener trunkCodeChange = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference,
+					Object value) {
+				firePreferenceChange(getEditTextPreference(EXTRA_COUNTRY_CODE),
+						value.toString());
+				setSummary(preference, _trunkSummaryFormat, value);
+				return true; // means persist the value
+			}
+		};
+
+		EditTextPreference countryPreference = (EditTextPreference) findPreference(EXTRA_COUNTRY_CODE);
 		countryPreference.setOnPreferenceChangeListener(countryCodeChange);
-		setSummary(countryPreference, countrySummaryFormat, countryPreference.getText());
+		setSummary(countryPreference, _countrySummaryFormat, countryPreference
+				.getText());
 
-		EditTextPreference trunkPreference = (EditTextPreference)findPreference(EXTRA_TRUNK_CODE);
+		EditTextPreference trunkPreference = (EditTextPreference) findPreference(EXTRA_TRUNK_CODE);
 		trunkPreference.setOnPreferenceChangeListener(trunkCodeChange);
-		setSummary(trunkPreference, trunkSummaryFormat, trunkPreference.getText());
-		
-		enableService(isServiceEnabled());
+		setSummary(trunkPreference, _trunkSummaryFormat, trunkPreference
+				.getText());
+
 	}
-	
+
+	@Override
+	protected void onResume() {
+		boolean enabled = isServiceEnabled();		
+		// If Service disabled tone dial after dial-once
+		// TODO find better way for model to raise events for UI changes
+		_enabledPreference.setChecked(enabled);
+		enableService(enabled);
+
+		super.onResume();
+	}
+
 	private void setSummary(Preference pref, MessageFormat format, Object code) {
-		if(code.toString().length() == 0) {
+		if (code.toString().length() == 0) {
 			code = "nothing";
 		}
-		pref.setSummary(format.format(new Object[]{code}));
+		pref.setSummary(format.format(new Object[] { code }));
 	}
-	
+
 	private String getEditTextPreference(String key) {
 		EditTextPreference preference = (EditTextPreference) findPreference(key);
 		return preference.getText();
@@ -117,15 +139,14 @@ public class ToneDialActivity extends PreferenceActivity {
 
 	public void firePreferenceChange(String countryCode, String trunkCode) {
 		Intent preferenceChange = new Intent(ACTION_PREFERENCE_CHANGE);
-		preferenceChange.putExtra(EXTRA_COUNTRY_CODE,
-				countryCode);
-		preferenceChange.putExtra(EXTRA_TRUNK_CODE,
-				trunkCode);
+		preferenceChange.putExtra(EXTRA_COUNTRY_CODE, countryCode);
+		preferenceChange.putExtra(EXTRA_TRUNK_CODE, trunkCode);
 		_intentHelper.startService(preferenceChange);
 	}
 
 	public void enableService(boolean enableTones) {
-		Intent toneDial = new Intent(ToneDialService.ACTION_SERVICE_STATE_CHANGE);
+		Intent toneDial = new Intent(
+				ToneDialService.ACTION_SERVICE_STATE_CHANGE);
 		addCodes(toneDial);
 
 		if (enableTones) {
@@ -143,8 +164,8 @@ public class ToneDialActivity extends PreferenceActivity {
 	}
 
 	public boolean isServiceEnabled() {
-		CheckBoxPreference enabled = (CheckBoxPreference) findPreference(PREF_ENABLE_TONES);
-		return enabled.isChecked();
+		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				PREF_ENABLE_TONES, false);
 	}
 
 	public void setIIntentHelper(IIntentHelper intentHelper) {
