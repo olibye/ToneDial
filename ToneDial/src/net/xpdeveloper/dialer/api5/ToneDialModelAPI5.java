@@ -47,15 +47,14 @@ public class ToneDialModelAPI5 extends ToneDialModel {
 	}
 
 	@Override
-	protected synchronized void dialDigit(final char digit, final int pause)
+	protected synchronized void dialDigit(final int dtmfCode, final int pause)
 			throws InterruptedException {
 
 		// wait before tone as this helps a sleeping amp wake up
 		// last pause isn't needed
 		wait(TONE_DURATION + pause);
 
-		int numericValue = Character.getNumericValue(digit);
-		_toneGenerator.startTone(toneCodes[numericValue], TONE_DURATION);
+		_toneGenerator.startTone(dtmfCode, TONE_DURATION);
 	}
 
 	@Override

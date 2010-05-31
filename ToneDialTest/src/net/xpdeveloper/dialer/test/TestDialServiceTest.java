@@ -10,11 +10,9 @@ import org.jmock.Mockery;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
-import android.widget.TwoLineListItem;
 
 public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 	private Mockery _mockery = new Mockery();
@@ -22,8 +20,6 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 	public TestDialServiceTest() {
 		super(ToneDialService.class);
 	}
-
-	
 	
 	public void testUsesCountryAndTrunkCodeRepeatedly() throws InterruptedException {
 		final IToneDialModel mockModel = _mockery.mock(IToneDialModel.class);

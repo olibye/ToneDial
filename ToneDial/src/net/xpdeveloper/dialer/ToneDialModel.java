@@ -71,7 +71,8 @@ public abstract class ToneDialModel implements IToneDialModel {
 
 		if (Character.isDigit(digit)) {
 			// ignore non digits
-			dialDigit(digit, pause);
+			int numericValue = Character.getNumericValue(digit);
+			dialDigit(toneCodes[numericValue], pause);
 		}
 
 		if (Character.isWhitespace(digit)) {
@@ -82,7 +83,7 @@ public abstract class ToneDialModel implements IToneDialModel {
 		// API1 API5 wrappers
 	}
 
-	protected abstract void dialDigit(char digit, int pause)
+	protected abstract void dialDigit(int dtmfCode, int pause)
 			throws InterruptedException;
 
 	/**

@@ -41,13 +41,12 @@ public class ToneDialModelAPI1 extends ToneDialModel {
 	}
 	
 	@Override
-	protected synchronized void dialDigit(final char digit, final int pause) throws InterruptedException {
+	protected synchronized void dialDigit(final int dtmfCode, final int pause) throws InterruptedException {
 				// Pause for to pronounce duplicate keys
 				// Pause at start to give amp time to power up
 				wait(pause);
 			
-				int numericValue = Character.getNumericValue(digit);
-				_toneGenerator.startTone(toneCodes[numericValue]);
+				_toneGenerator.startTone(dtmfCode);
 			
 				// Wait after tone start to support Donut which lacks
 				// startTone( , duration) method
