@@ -15,15 +15,16 @@
  */
 package net.xpdeveloper.dialer.test;
 
+import junit.framework.TestCase;
 import net.xpdeveloper.dialer.IToneGeneratorStrategy;
+import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.ToneDialModel;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 
+import android.content.SharedPreferences;
 import android.media.ToneGenerator;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -36,26 +37,69 @@ public class ToneDialModelUnitTestCase extends TestCase {
 	public void testDTMFCodes() throws InterruptedException {
 		final IToneGeneratorStrategy mockStrategy = _mockery
 				.mock(IToneGeneratorStrategy.class);
-		
+		final SharedPreferences mockPreferences = _mockery.mock(SharedPreferences.class);
+
 		_mockery.checking(new Expectations() {
 			{
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_0, ToneDialModel.TONE_PAUSE * 3);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_1, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_2, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_3, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_4, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_5, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_6, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_7, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_8, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_9, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_P, ToneDialModel.TONE_PAUSE);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_S, ToneDialModel.TONE_PAUSE);
+				one(mockPreferences).getString(ToneDialActivity.EXTRA_COUNTRY_CODE, "");
+				will(returnValue(""));
+				one(mockPreferences).getString(ToneDialActivity.EXTRA_TRUNK_CODE, "");
+				will(returnValue(""));
+				
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_0,
+						ToneDialModel.TONE_PAUSE * 3);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_1,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_2,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_3,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_4,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_5,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_6,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_7,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_8,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_9,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_P,
+						ToneDialModel.TONE_PAUSE);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_S,
+						ToneDialModel.TONE_PAUSE);
 			}
 		});
 
-		ToneDialModel unit = new ToneDialModel(mockStrategy);
+		ToneDialModel unit = new ToneDialModel(mockStrategy, mockPreferences);
 		unit.dial("0123456789#*- ");
 		_mockery.assertIsSatisfied();
+	}
+
+	public void testCountryCodeReplacedWithTrunkCode() throws InterruptedException {
+		final IToneGeneratorStrategy mockStrategy = _mockery
+				.mock(IToneGeneratorStrategy.class);
+		final SharedPreferences mockPreferences = _mockery.mock(SharedPreferences.class);
+
+		_mockery.checking(new Expectations() {
+			{
+				one(mockPreferences).getString(ToneDialActivity.EXTRA_COUNTRY_CODE, "");
+				will(returnValue("+44"));
+				one(mockPreferences).getString(ToneDialActivity.EXTRA_TRUNK_CODE, "");
+				will(returnValue("0"));
+
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_0,
+						ToneDialModel.TONE_PAUSE * 3);
+				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_1,
+						ToneDialModel.TONE_PAUSE);
+			}
+		});
+
+		ToneDialModel unit = new ToneDialModel(mockStrategy, mockPreferences);
+		unit.dial("+441");
+		_mockery.assertIsSatisfied();
+
 	}
 }

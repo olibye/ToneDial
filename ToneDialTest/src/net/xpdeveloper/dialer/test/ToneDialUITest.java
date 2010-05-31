@@ -5,20 +5,12 @@ import java.util.ArrayList;
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.ToneDialService;
-
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceGroup;
 import android.provider.Contacts;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -28,7 +20,6 @@ public class ToneDialUITest extends
 		ActivityInstrumentationTestCase2<ToneDialActivity> {
 
 	private Solo _solo;
-	private Mockery _mockery = new Mockery();
 
 	/**
 	 * Tests require a default constructor
@@ -105,47 +96,6 @@ public class ToneDialUITest extends
 		Editor editor = preference.getEditor();
 		editor.putString(key, code);
 		editor.commit();
-	}
-
-	public void testPreferenceChangeIntentOnCountryCodeChange() {
-		final IIntentHelper mockIntentHelper = _mockery
-				.mock(IIntentHelper.class);
-
-		class IntentMatcher extends BaseMatcher<Intent> {
-			public boolean matches(Object item) {
-				if (item instanceof Intent) {
-					Intent intent = (Intent) item;
-					assertEquals(ToneDialActivity.ACTION_PREFERENCE_CHANGE,
-							intent.getAction());
-					assertEquals(
-							"+44",
-							intent
-									.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE));
-					assertEquals("0", intent
-							.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE));
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Intent checking");
-			}
-		}
-
-		_mockery.checking(new Expectations() {
-			{
-				one(mockIntentHelper).startService(with(new IntentMatcher()));
-			}
-		});
-
-		ToneDialActivity unit = getActivity();
-		unit.setIIntentHelper(mockIntentHelper);
-
-		unit.firePreferenceChange("+44", "0");
-
-		_mockery.assertIsSatisfied();
 	}
 
 	public void testCountryCodeSummaryChange() {

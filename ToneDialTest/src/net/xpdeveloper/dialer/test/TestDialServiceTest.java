@@ -21,24 +21,22 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 		super(ToneDialService.class);
 	}
 	
-	public void testUsesCountryAndTrunkCodeRepeatedly() throws InterruptedException {
+	public void testDialManyIfDialOnceNotSet() throws InterruptedException {
 		final IToneDialModel mockModel = _mockery.mock(IToneDialModel.class);
 
 		_mockery.checking(new Expectations() {
 			{
-				exactly(2).of(mockModel).dial("01202123456");
-				
-				// Ignore or expections are thrown teardown when the service is shutdown
+				exactly(2).of(mockModel).dial("+441202123456");
+				will(returnValue("01202123456"));
+
+				// Ignore or exceptions are thrown teardown when the service is shutdown
 				ignoring(mockModel).release(); 
 			}
 		});
 
 		setPreference(ToneDialActivity.PREF_ENABLE_TONES_ONCE,false);
 
-		Intent intent = new Intent(ToneDialActivity.ACTION_PREFERENCE_CHANGE);
-		intent.putExtra(ToneDialActivity.EXTRA_COUNTRY_CODE, "+44");
-		intent.putExtra(ToneDialActivity.EXTRA_TRUNK_CODE, "0");
-
+		Intent intent = new Intent(ToneDialService.ACTION_SERVICE_STATE_CHANGE);
 		startService(intent); // or there is no service
 
 		ToneDialService unit = getService();
@@ -65,7 +63,8 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 
 		_mockery.checking(new Expectations() {
 			{
-				one(mockModel).dial("01202123456");
+				one(mockModel).dial("+441202123456");
+				will(returnValue("01202123456"));
 				
 				// Ignore or expections are thrown teardown when the service is shutdown
 				ignoring(mockModel).release(); 
@@ -74,10 +73,7 @@ public class TestDialServiceTest extends ServiceTestCase<ToneDialService> {
 
 		setPreference(ToneDialActivity.PREF_ENABLE_TONES_ONCE,true);
 		
-		Intent intent = new Intent(ToneDialActivity.ACTION_PREFERENCE_CHANGE);
-		intent.putExtra(ToneDialActivity.EXTRA_COUNTRY_CODE, "+44");
-		intent.putExtra(ToneDialActivity.EXTRA_TRUNK_CODE, "0");
-
+		Intent intent = new Intent(ToneDialService.ACTION_SERVICE_STATE_CHANGE);
 		startService(intent); // or there is no service
 
 		ToneDialService unit = getService();

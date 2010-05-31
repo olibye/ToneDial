@@ -27,6 +27,7 @@ import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
 import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
+import android.content.SharedPreferences;
 import android.media.ToneGenerator;
 import android.os.Build;
 
@@ -46,25 +47,29 @@ public class ToneDialModel implements IToneDialModel {
 	public static final String EMERGENCY_911 = "911";
 
 	private IToneGeneratorStrategy _toneGeneratorStrategy;
+	private SharedPreferences _preferences;
 
-	public ToneDialModel(IToneGeneratorStrategy strategy) {
+	public ToneDialModel(IToneGeneratorStrategy strategy,
+			SharedPreferences preferences) {
 		_toneGeneratorStrategy = strategy;
+		_preferences = preferences;
 	}
 
-	public ToneDialModel() {
-		this(buildModel());
+	public ToneDialModel(SharedPreferences preferences) {
+		this(buildModel(), preferences);
 	}
 
-	public void dial(String dialString) throws InterruptedException {
-		int digitCount = dialString.length();
+	public String dial(String originalDestination) throws InterruptedException {
+		String reply = adjustNumber(originalDestination);
 
+		int digitCount = reply.length();
 		if (digitCount > 0) {
 			// Big pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3);
+			dialDigitOrPause(reply.charAt(0), TONE_PAUSE * 3);
 
 			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
-				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE);
+				dialDigitOrPause(reply.charAt(digitIndex), TONE_PAUSE);
 			}
 
 			// Pause to make sure this app doesn't quit before the tone is
@@ -73,6 +78,7 @@ public class ToneDialModel implements IToneDialModel {
 			dialDigitOrPause(' ', TONE_PAUSE);
 		}
 
+		return reply;
 	}
 
 	/*
@@ -105,6 +111,27 @@ public class ToneDialModel implements IToneDialModel {
 	@Override
 	public void release() {
 		_toneGeneratorStrategy.release();
+	}
+
+	private String adjustNumber(String originalDestination) {
+		String reply = originalDestination;
+
+		String countryCode = lookupCode(ToneDialActivity.EXTRA_COUNTRY_CODE);
+		String trunkCode = lookupCode(ToneDialActivity.EXTRA_TRUNK_CODE);
+
+		if (originalDestination.startsWith(countryCode)) {
+			StringBuffer replyBuffer = new StringBuffer();
+			replyBuffer.append(trunkCode);
+			replyBuffer.append(originalDestination.substring(countryCode
+					.length()));
+			reply = replyBuffer.toString();
+		}
+
+		return reply;
+	}
+
+	private String lookupCode(String key) {
+		return _preferences.getString(key, "");
 	}
 
 	/**
@@ -141,4 +168,5 @@ public class ToneDialModel implements IToneDialModel {
 	public static IToneGeneratorStrategy buildModel() {
 		return buildModel(Integer.parseInt(Build.VERSION.SDK));
 	}
+
 }

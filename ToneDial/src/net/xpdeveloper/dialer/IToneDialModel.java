@@ -15,7 +15,6 @@
  */
 package net.xpdeveloper.dialer;
 
-
 public interface IToneDialModel {
 
 	/**
@@ -25,7 +24,7 @@ public interface IToneDialModel {
 	 * @throws InterruptedException
 	 *             because we Object.wait() for tones to play.
 	 */
-	public void dial(String dialString)
+	public String dial(String dialString)
 			throws InterruptedException;
 
 	/**

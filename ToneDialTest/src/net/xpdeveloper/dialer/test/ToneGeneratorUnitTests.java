@@ -5,7 +5,8 @@ import net.xpdeveloper.dialer.ToneDialModel;
 import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
 import android.os.Build;
-import android.test.ActivityUnitTestCase;
+import android.preference.PreferenceManager;
+import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Make some noise!
@@ -14,31 +15,41 @@ import android.test.ActivityUnitTestCase;
  * 
  */
 public class ToneGeneratorUnitTests extends
-		ActivityUnitTestCase<ToneDialActivity> {
+		ActivityInstrumentationTestCase2<ToneDialActivity> {
 
 	public ToneGeneratorUnitTests() {
-		super(ToneDialActivity.class);
+		super(ToneDialActivity.class.getPackage().getName(),
+				ToneDialActivity.class);
 	}
 
 	public void testToneDialModelMakesNoise() throws InterruptedException {
-		ToneDialModel unit = new ToneDialModel();
+		ToneDialModel unit = new ToneDialModel(PreferenceManager
+				.getDefaultSharedPreferences(getActivity()));
 
 		unit.dial("0-123-45-6789#*");
 		unit.release();
 	}
 
 	public void testDetermineOSLevel() {
-		
-		checkVersionBuildsClassOrThrowsVerify(1, API1ToneGeneratorStrategy.class,false);
-		checkVersionBuildsClassOrThrowsVerify(2, API1ToneGeneratorStrategy.class,false);
-		checkVersionBuildsClassOrThrowsVerify(3, API1ToneGeneratorStrategy.class,false);
-		checkVersionBuildsClassOrThrowsVerify(4, API1ToneGeneratorStrategy.class,false);
-		
+
+		checkVersionBuildsClassOrThrowsVerify(1,
+				API1ToneGeneratorStrategy.class, false);
+		checkVersionBuildsClassOrThrowsVerify(2,
+				API1ToneGeneratorStrategy.class, false);
+		checkVersionBuildsClassOrThrowsVerify(3,
+				API1ToneGeneratorStrategy.class, false);
+		checkVersionBuildsClassOrThrowsVerify(4,
+				API1ToneGeneratorStrategy.class, false);
+
 		boolean shouldThrowVerifyError = Build.VERSION.SDK_INT < 5;
-		checkVersionBuildsClassOrThrowsVerify(5, API5ToneGeneratorStrategy.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(6, API5ToneGeneratorStrategy.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(7, API5ToneGeneratorStrategy.class,shouldThrowVerifyError);
-		checkVersionBuildsClassOrThrowsVerify(8, API5ToneGeneratorStrategy.class,shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(5,
+				API5ToneGeneratorStrategy.class, shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(6,
+				API5ToneGeneratorStrategy.class, shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(7,
+				API5ToneGeneratorStrategy.class, shouldThrowVerifyError);
+		checkVersionBuildsClassOrThrowsVerify(8,
+				API5ToneGeneratorStrategy.class, shouldThrowVerifyError);
 	}
 
 	private void checkVersionBuildsClassOrThrowsVerify(int sdkVersion,

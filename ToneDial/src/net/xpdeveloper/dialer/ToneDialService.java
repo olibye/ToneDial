@@ -45,22 +45,6 @@ public class ToneDialService extends Service {
 	private IToneDialModel _model;
 	private boolean _stopped = false;
 
-	private String _countryCode = "";
-	private String _trunkCode = "";
-
-	/**
-	 * I'm needed by my unit tests
-	 * 
-	 * @param model
-	 */
-	public ToneDialService(IToneDialModel model) {
-		setModel(model);
-	}
-
-	public ToneDialService() {
-		this(new ToneDialModel());
-	}
-
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -76,21 +60,21 @@ public class ToneDialService extends Service {
 				String originalDestination = data
 						.getEncodedSchemeSpecificPart();
 				toneDial(originalDestination);
-				
+
 				if (shouldDialOnlyOnce()) {
 					_stopped = true;
-					
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+					SharedPreferences prefs = PreferenceManager
+							.getDefaultSharedPreferences(this);
 					Editor editor = prefs.edit();
-					editor.putBoolean(ToneDialActivity.PREF_ENABLE_TONES, false);
+					editor
+							.putBoolean(ToneDialActivity.PREF_ENABLE_TONES,
+									false);
 					editor.commit();
-					 
-					stopSelf();					
+
+					stopSelf();
 				}
-			} else if (ToneDialActivity.ACTION_PREFERENCE_CHANGE.equals(action)) {
-				saveCodes(intent);
 			} else if (ACTION_SERVICE_STATE_CHANGE.equals(action)) {
-				saveCodes(intent);
 				displayNotification(getText(R.string.ticker_tone_dial_on),
 						getText(R.string.notification_text));
 			} else {
@@ -102,14 +86,9 @@ public class ToneDialService extends Service {
 	}
 
 	private boolean shouldDialOnlyOnce() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		return prefs.getBoolean(ToneDialActivity.PREF_ENABLE_TONES_ONCE, false);
-	}
-
-	private void saveCodes(Intent intent) {
-		_countryCode = intent
-				.getStringExtra(ToneDialActivity.EXTRA_COUNTRY_CODE);
-		_trunkCode = intent.getStringExtra(ToneDialActivity.EXTRA_TRUNK_CODE);
 	}
 
 	/**
@@ -117,46 +96,32 @@ public class ToneDialService extends Service {
 	 * @param originalDestination
 	 * @return the number actually dialled
 	 */
-	public String toneDial(String originalDestination) {
-		String dialString = adjustNumber(originalDestination);
+	public void toneDial(String originalDestination) {
 		try {
+			String dialString = _model.dial(originalDestination);
+
 			displayNotification(
 					getText(R.string.ticker_tone_dial) + dialString,
 					getText(R.string.notification_text_tone_dial) + dialString);
-			_model.dial(dialString);
+
 		} catch (InterruptedException e) {
 			Log.e(ToneDialActivity.TAG, "Unable to generate DTMF tones", e);
 		}
-		return dialString;
-	}
-
-	private String adjustNumber(String originalDestination) {
-		String reply = originalDestination;
-
-		if (originalDestination.startsWith(_countryCode)) {
-			StringBuffer replyBuffer = new StringBuffer();
-			replyBuffer.append(_trunkCode);
-			replyBuffer.append(originalDestination.substring(_countryCode
-					.length()));
-			reply = replyBuffer.toString();
-		}
-
-		return reply;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+		_model = new ToneDialModel(PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext()));
 		manageRegistration(true);
 	}
 
 	@Override
 	public void onDestroy() {
+		cancelNotification();
 		manageRegistration(false);
 		_model.release();
-		cancelNotification();
-
 		super.onDestroy();
 	}
 
