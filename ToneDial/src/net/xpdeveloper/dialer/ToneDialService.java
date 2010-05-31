@@ -15,6 +15,9 @@
  */
 package net.xpdeveloper.dialer;
 
+import net.xpdeveloper.dialer.model.DialMemento;
+import net.xpdeveloper.dialer.model.IToneDialModel;
+import net.xpdeveloper.dialer.model.ToneDialModel;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -98,11 +101,15 @@ public class ToneDialService extends Service {
 	 */
 	public void toneDial(String originalDestination) {
 		try {
-			String dialString = _model.dial(originalDestination);
-
+			DialMemento memento= _model.localise(originalDestination);
+			String dialString = memento.getDialString();
+			
 			displayNotification(
 					getText(R.string.ticker_tone_dial) + dialString,
 					getText(R.string.notification_text_tone_dial) + dialString);
+			
+			// Now we can make the noise, or the notification is delayed
+			memento.dial();
 
 		} catch (InterruptedException e) {
 			Log.e(ToneDialActivity.TAG, "Unable to generate DTMF tones", e);

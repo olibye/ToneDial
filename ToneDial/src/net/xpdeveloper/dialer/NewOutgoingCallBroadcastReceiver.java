@@ -15,6 +15,7 @@
  */
 package net.xpdeveloper.dialer;
 
+import net.xpdeveloper.dialer.model.ToneDialModel;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

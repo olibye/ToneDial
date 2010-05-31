@@ -13,20 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer;
+package net.xpdeveloper.dialer.model;
+
 
 public interface IToneDialModel {
 
 	/**
-	 * 
+	 * Localise the dialString into a memento
 	 * @param dialString
 	 *            the tones to dial (including " " and "-" for pauses
+	 */
+	public DialMemento localise(String dialString);
+
+	/**
+	 * @param memento result from localise
 	 * @throws InterruptedException
 	 *             because we Object.wait() for tones to play.
 	 */
-	public String dial(String dialString)
-			throws InterruptedException;
-
+	public void dial(DialMemento memento)
+	throws InterruptedException;
+	
 	/**
 	 * Free up OS resources, e.g. the internal ToneGenerator that my
 	 * implementation is highly likely to contain

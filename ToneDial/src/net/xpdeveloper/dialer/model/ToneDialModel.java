@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer;
+package net.xpdeveloper.dialer.model;
 
 import static android.media.ToneGenerator.TONE_DTMF_0;
 import static android.media.ToneGenerator.TONE_DTMF_1;
@@ -25,6 +25,8 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
+import net.xpdeveloper.dialer.IToneGeneratorStrategy;
+import net.xpdeveloper.dialer.ToneDialActivity;
 import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
 import android.content.SharedPreferences;
@@ -59,17 +61,22 @@ public class ToneDialModel implements IToneDialModel {
 		this(buildModel(), preferences);
 	}
 
-	public String dial(String originalDestination) throws InterruptedException {
-		String reply = adjustNumber(originalDestination);
+	public DialMemento localise(String originalDestination) {
+		DialMemento reply = new DialMemento(this,
+				adjustNumber(originalDestination));
+		return reply;
+	}
 
-		int digitCount = reply.length();
+	public void dial(DialMemento memento) throws InterruptedException {
+		String dialString = memento.getDialString();
+		int digitCount = dialString.length();
 		if (digitCount > 0) {
 			// Big pause before for the first tone
 			// We typically see "AudioFlinger write blocked for 172 ms
-			dialDigitOrPause(reply.charAt(0), TONE_PAUSE * 3);
+			dialDigitOrPause(dialString.charAt(0), TONE_PAUSE * 3);
 
 			for (int digitIndex = 1; digitIndex < digitCount; digitIndex++) {
-				dialDigitOrPause(reply.charAt(digitIndex), TONE_PAUSE);
+				dialDigitOrPause(dialString.charAt(digitIndex), TONE_PAUSE);
 			}
 
 			// Pause to make sure this app doesn't quit before the tone is
@@ -77,14 +84,12 @@ public class ToneDialModel implements IToneDialModel {
 			// For example when running in tests
 			dialDigitOrPause(' ', TONE_PAUSE);
 		}
-
-		return reply;
 	}
 
 	/*
 	 * TODO needs a hash lookup table
 	 */
-	synchronized void dialDigitOrPause(final char digit, final int pause)
+	private synchronized void dialDigitOrPause(final char digit, final int pause)
 			throws InterruptedException {
 
 		if (Character.isDigit(digit)) {

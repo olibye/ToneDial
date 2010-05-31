@@ -1,9 +1,9 @@
 package net.xpdeveloper.dialer.test;
 
 import net.xpdeveloper.dialer.ToneDialActivity;
-import net.xpdeveloper.dialer.ToneDialModel;
 import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.model.ToneDialModel;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
@@ -26,7 +26,7 @@ public class ToneGeneratorUnitTests extends
 		ToneDialModel unit = new ToneDialModel(PreferenceManager
 				.getDefaultSharedPreferences(getActivity()));
 
-		unit.dial("0-123-45-6789#*");
+		unit.localise("0-123-45-6789#*").dial();
 		unit.release();
 	}
 

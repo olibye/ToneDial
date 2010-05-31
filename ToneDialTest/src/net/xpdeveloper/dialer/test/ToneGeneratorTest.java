@@ -1,7 +1,7 @@
 package net.xpdeveloper.dialer.test;
 
-import net.xpdeveloper.dialer.ToneDialModel;
 import net.xpdeveloper.dialer.ToneDialService;
+import net.xpdeveloper.dialer.model.ToneDialModel;
 import android.test.ServiceTestCase;
 
 public class ToneGeneratorTest extends ServiceTestCase<ToneDialService> {

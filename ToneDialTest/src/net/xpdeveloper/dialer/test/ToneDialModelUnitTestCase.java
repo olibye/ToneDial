@@ -18,7 +18,8 @@ package net.xpdeveloper.dialer.test;
 import junit.framework.TestCase;
 import net.xpdeveloper.dialer.IToneGeneratorStrategy;
 import net.xpdeveloper.dialer.ToneDialActivity;
-import net.xpdeveloper.dialer.ToneDialModel;
+import net.xpdeveloper.dialer.model.DialMemento;
+import net.xpdeveloper.dialer.model.ToneDialModel;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -37,15 +38,18 @@ public class ToneDialModelUnitTestCase extends TestCase {
 	public void testDTMFCodes() throws InterruptedException {
 		final IToneGeneratorStrategy mockStrategy = _mockery
 				.mock(IToneGeneratorStrategy.class);
-		final SharedPreferences mockPreferences = _mockery.mock(SharedPreferences.class);
+		final SharedPreferences mockPreferences = _mockery
+				.mock(SharedPreferences.class);
 
 		_mockery.checking(new Expectations() {
 			{
-				one(mockPreferences).getString(ToneDialActivity.EXTRA_COUNTRY_CODE, "");
+				one(mockPreferences).getString(
+						ToneDialActivity.EXTRA_COUNTRY_CODE, "");
 				will(returnValue(""));
-				one(mockPreferences).getString(ToneDialActivity.EXTRA_TRUNK_CODE, "");
+				one(mockPreferences).getString(
+						ToneDialActivity.EXTRA_TRUNK_CODE, "");
 				will(returnValue(""));
-				
+
 				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_0,
 						ToneDialModel.TONE_PAUSE * 3);
 				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_1,
@@ -74,31 +78,32 @@ public class ToneDialModelUnitTestCase extends TestCase {
 		});
 
 		ToneDialModel unit = new ToneDialModel(mockStrategy, mockPreferences);
-		unit.dial("0123456789#*- ");
+		unit.localise("0123456789#*- ").dial();
 		_mockery.assertIsSatisfied();
 	}
 
-	public void testCountryCodeReplacedWithTrunkCode() throws InterruptedException {
+	public void testCountryCodeReplacedWithTrunkCode()
+			throws InterruptedException {
 		final IToneGeneratorStrategy mockStrategy = _mockery
 				.mock(IToneGeneratorStrategy.class);
-		final SharedPreferences mockPreferences = _mockery.mock(SharedPreferences.class);
+		final SharedPreferences mockPreferences = _mockery
+				.mock(SharedPreferences.class);
 
 		_mockery.checking(new Expectations() {
 			{
-				one(mockPreferences).getString(ToneDialActivity.EXTRA_COUNTRY_CODE, "");
+				one(mockPreferences).getString(
+						ToneDialActivity.EXTRA_COUNTRY_CODE, "");
 				will(returnValue("+44"));
-				one(mockPreferences).getString(ToneDialActivity.EXTRA_TRUNK_CODE, "");
+				one(mockPreferences).getString(
+						ToneDialActivity.EXTRA_TRUNK_CODE, "");
 				will(returnValue("0"));
-
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_0,
-						ToneDialModel.TONE_PAUSE * 3);
-				one(mockStrategy).generateTone(ToneGenerator.TONE_DTMF_1,
-						ToneDialModel.TONE_PAUSE);
 			}
 		});
 
 		ToneDialModel unit = new ToneDialModel(mockStrategy, mockPreferences);
-		unit.dial("+441");
+		DialMemento number = unit.localise("+441");
+		assertEquals("Didn't replace country code with trunk code", "01",
+				number.getDialString());
 		_mockery.assertIsSatisfied();
 
 	}
