@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/jmock-junit3-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/robotium-solo-1.5.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ToneDialLibrary"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

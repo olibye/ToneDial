@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import net.xpdeveloper.dialer.unlimited.ToneDialUnlimited;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.Button;
 import android.widget.ToggleButton;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -56,7 +57,7 @@ public class UnlimitedStrategyUITestCase extends
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial Unlimited"));
 
-		ArrayList<ToggleButton> buttons = _solo.getCurrentToggleButtons();
-		assertTrue("Dial once only should be enabled", buttons.get(1).isEnabled());
+		Button button = _solo.getButton(1);
+		assertTrue("Dial once only should be enabled", button.isEnabled());
 	}
 }
