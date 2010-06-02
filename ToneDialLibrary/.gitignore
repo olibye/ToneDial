@@ -1,7 +1,6 @@
 # Generated files
 /bin/*
 /gen/*
-local.properties
 
 # Jgit appears to ignore the above
 # So filter out the files inside

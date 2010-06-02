@@ -25,7 +25,7 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 import net.xpdeveloper.dialer.common.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.common.api5.API5ToneGeneratorStrategy;
 import android.content.SharedPreferences;

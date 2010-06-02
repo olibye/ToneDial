@@ -15,8 +15,8 @@
  */
 package net.xpdeveloper.dialer.common.service;
 
-import net.xpdeveloper.dialer.R;
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.R;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 import net.xpdeveloper.dialer.common.model.DialMemento;
 import net.xpdeveloper.dialer.common.model.IToneDialModel;
 import net.xpdeveloper.dialer.common.model.ToneDialModel;

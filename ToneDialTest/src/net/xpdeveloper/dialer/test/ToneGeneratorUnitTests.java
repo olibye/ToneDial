@@ -1,6 +1,6 @@
 package net.xpdeveloper.dialer.test;
 
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.ToneDialLimitedActivity;
 import net.xpdeveloper.dialer.common.api1.API1ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.common.api5.API5ToneGeneratorStrategy;
 import net.xpdeveloper.dialer.common.model.ToneDialModel;
@@ -15,11 +15,11 @@ import android.test.ActivityInstrumentationTestCase2;
  * 
  */
 public class ToneGeneratorUnitTests extends
-		ActivityInstrumentationTestCase2<ToneDialActivity> {
+		ActivityInstrumentationTestCase2<ToneDialLimitedActivity> {
 
 	public ToneGeneratorUnitTests() {
-		super(ToneDialActivity.class.getPackage().getName(),
-				ToneDialActivity.class);
+		super(ToneDialLimitedActivity.class.getPackage().getName(),
+				ToneDialLimitedActivity.class);
 	}
 
 	public void testToneDialModelMakesNoise() throws InterruptedException {

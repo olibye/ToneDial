@@ -16,7 +16,7 @@
 package net.xpdeveloper.dialer.test;
 
 import junit.framework.TestCase;
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 import net.xpdeveloper.dialer.common.model.DialMemento;
 import net.xpdeveloper.dialer.common.model.IToneGeneratorStrategy;
 import net.xpdeveloper.dialer.common.model.ToneDialModel;

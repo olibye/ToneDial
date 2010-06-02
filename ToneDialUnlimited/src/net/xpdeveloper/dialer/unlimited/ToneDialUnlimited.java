@@ -15,7 +15,7 @@
  */
 package net.xpdeveloper.dialer.unlimited;
 
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 
 public class ToneDialUnlimited extends ToneDialActivity {
 }

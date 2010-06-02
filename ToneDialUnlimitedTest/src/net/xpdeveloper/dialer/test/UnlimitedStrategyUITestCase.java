@@ -17,13 +17,11 @@ package net.xpdeveloper.dialer.test;
 
 import java.util.ArrayList;
 
-import com.jayway.android.robotium.solo.Solo;
-
 import net.xpdeveloper.dialer.unlimited.ToneDialUnlimited;
-import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.ListView;
 import android.widget.ToggleButton;
+
+import com.jayway.android.robotium.solo.Solo;
 
 public class UnlimitedStrategyUITestCase extends
 		ActivityInstrumentationTestCase2<ToneDialUnlimited> {

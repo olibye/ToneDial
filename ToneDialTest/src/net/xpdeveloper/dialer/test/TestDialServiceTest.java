@@ -1,6 +1,6 @@
 package net.xpdeveloper.dialer.test;
 
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 import net.xpdeveloper.dialer.common.model.DialMemento;
 import net.xpdeveloper.dialer.common.model.IToneDialModel;
 import net.xpdeveloper.dialer.common.service.ToneDialService;

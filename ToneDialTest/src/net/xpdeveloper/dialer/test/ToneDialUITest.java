@@ -3,7 +3,8 @@ package net.xpdeveloper.dialer.test;
 import java.util.ArrayList;
 
 import net.xpdeveloper.android.IIntentHelper;
-import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.ToneDialLimitedActivity;
+import net.xpdeveloper.dialer.common.ToneDialActivity;
 import net.xpdeveloper.dialer.common.service.ToneDialService;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -17,7 +18,7 @@ import android.widget.ListView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class ToneDialUITest extends
-		ActivityInstrumentationTestCase2<ToneDialActivity> {
+		ActivityInstrumentationTestCase2<ToneDialLimitedActivity> {
 
 	private Solo _solo;
 
@@ -25,8 +26,8 @@ public class ToneDialUITest extends
 	 * Tests require a default constructor
 	 */
 	public ToneDialUITest() {
-		super(ToneDialActivity.class.getPackage().getName(),
-				ToneDialActivity.class);
+		super(ToneDialLimitedActivity.class.getPackage().getName(),
+				ToneDialLimitedActivity.class);
 	}
 
 	@Override
