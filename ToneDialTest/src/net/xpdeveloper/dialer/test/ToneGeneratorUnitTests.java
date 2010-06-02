@@ -1,9 +1,9 @@
 package net.xpdeveloper.dialer.test;
 
 import net.xpdeveloper.dialer.ToneDialActivity;
-import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
-import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
-import net.xpdeveloper.dialer.model.ToneDialModel;
+import net.xpdeveloper.dialer.common.api1.API1ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.common.api5.API5ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.common.model.ToneDialModel;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;

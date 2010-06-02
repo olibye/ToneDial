@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer.api1;
+package net.xpdeveloper.dialer.common.api5;
 
-import net.xpdeveloper.dialer.IToneGeneratorStrategy;
+import net.xpdeveloper.dialer.common.model.IToneGeneratorStrategy;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
@@ -28,32 +28,35 @@ import android.media.ToneGenerator;
  * @author byeo
  * 
  */
-public class API1ToneGeneratorStrategy implements IToneGeneratorStrategy {
+public class API5ToneGeneratorStrategy implements IToneGeneratorStrategy {
 	private ToneGenerator _toneGenerator;
 
-	public API1ToneGeneratorStrategy() {
+	/**
+	 * Will throw @see java.lang.VerifyError if we try to call this on an older
+	 * phone.
+	 * 
+	 * @param volume
+	 */
+	public API5ToneGeneratorStrategy() {
 		this(80);
 	}
 
-	public API1ToneGeneratorStrategy(int volume) {
+	public API5ToneGeneratorStrategy(int volume) {
+		// AudioManager.STREAM_DTMF on API 7
 		// http://developer.android.com/reference/android/media/ToneGenerator.html#ToneGenerator(int,
 		// int)
-		_toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, volume);
+		_toneGenerator = new ToneGenerator(AudioManager.STREAM_DTMF, volume);
 	}
 
 	@Override
 	public synchronized void generateTone(final int dtmfCode, final int pause)
 			throws InterruptedException {
-		// Pause for to pronounce duplicate keys
-		// Pause at start to give amp time to power up
-		wait(pause);
 
-		_toneGenerator.startTone(dtmfCode);
+		// wait before tone as this helps a sleeping amp wake up
+		// last pause isn't needed
 
-		// Wait after tone start to support Donut which lacks
-		// startTone( , duration) method
-		wait(pause);
-		_toneGenerator.stopTone();
+		_toneGenerator.startTone(dtmfCode, pause);
+		wait(pause*2);
 	}
 
 	@Override

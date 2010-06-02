@@ -15,10 +15,15 @@
  */
 package net.xpdeveloper.dialer.test;
 
+import java.util.ArrayList;
+
 import com.jayway.android.robotium.solo.Solo;
 
 import net.xpdeveloper.dialer.unlimited.ToneDialUnlimited;
+import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ListView;
+import android.widget.ToggleButton;
 
 public class UnlimitedStrategyUITestCase extends
 		ActivityInstrumentationTestCase2<ToneDialUnlimited> {
@@ -49,9 +54,11 @@ public class UnlimitedStrategyUITestCase extends
 		super.tearDown();
 	}
 
-	public void testDialOnceDisabled() {
+	public void testDialOnceEnabled() {
 		assertTrue("Expecting the Tone Dial Page", _solo
 				.searchText("Tone Dial Unlimited"));
 
+		ArrayList<ToggleButton> buttons = _solo.getCurrentToggleButtons();
+		assertTrue("Dial once only should be enabled", buttons.get(1).isEnabled());
 	}
 }

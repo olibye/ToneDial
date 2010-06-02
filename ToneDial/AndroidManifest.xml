@@ -15,7 +15,7 @@
 			</intent-filter>
 		</activity>
 
-		<service android:name=".ToneDialService">
+		<service android:name="net.xpdeveloper.dialer.common.service.ToneDialService">
 			<intent-filter>
 				<action android:name="net.xpdeveloper.dialer.PREFERENCE_CHANGE" />
 				<action android:name="net.xpdeveloper.dialer.SERVICE_STATE_CHANGE" />

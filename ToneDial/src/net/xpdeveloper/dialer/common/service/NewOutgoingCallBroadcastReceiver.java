@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer;
+package net.xpdeveloper.dialer.common.service;
 
-import net.xpdeveloper.dialer.model.ToneDialModel;
+import net.xpdeveloper.dialer.common.model.ToneDialModel;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

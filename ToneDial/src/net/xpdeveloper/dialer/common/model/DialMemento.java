@@ -14,7 +14,7 @@
  * the License.
  */
 
-package net.xpdeveloper.dialer.model;
+package net.xpdeveloper.dialer.common.model;
 
 public class DialMemento {
 	private String _dialString;

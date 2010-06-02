@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.dialer.ToneDialActivity;
-import net.xpdeveloper.dialer.ToneDialService;
+import net.xpdeveloper.dialer.common.service.ToneDialService;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.preference.EditTextPreference;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer.model;
+package net.xpdeveloper.dialer.common.model;
 
 import static android.media.ToneGenerator.TONE_DTMF_0;
 import static android.media.ToneGenerator.TONE_DTMF_1;
@@ -25,10 +25,9 @@ import static android.media.ToneGenerator.TONE_DTMF_6;
 import static android.media.ToneGenerator.TONE_DTMF_7;
 import static android.media.ToneGenerator.TONE_DTMF_8;
 import static android.media.ToneGenerator.TONE_DTMF_9;
-import net.xpdeveloper.dialer.IToneGeneratorStrategy;
 import net.xpdeveloper.dialer.ToneDialActivity;
-import net.xpdeveloper.dialer.api1.API1ToneGeneratorStrategy;
-import net.xpdeveloper.dialer.api5.API5ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.common.api1.API1ToneGeneratorStrategy;
+import net.xpdeveloper.dialer.common.api5.API5ToneGeneratorStrategy;
 import android.content.SharedPreferences;
 import android.media.ToneGenerator;
 import android.os.Build;

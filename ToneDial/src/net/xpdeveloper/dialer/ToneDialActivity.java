@@ -19,6 +19,7 @@ import java.text.MessageFormat;
 
 import net.xpdeveloper.android.IIntentHelper;
 import net.xpdeveloper.android.IntentHelper;
+import net.xpdeveloper.dialer.common.service.ToneDialService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;

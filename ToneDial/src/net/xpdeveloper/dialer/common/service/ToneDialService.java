@@ -13,11 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer;
+package net.xpdeveloper.dialer.common.service;
 
-import net.xpdeveloper.dialer.model.DialMemento;
-import net.xpdeveloper.dialer.model.IToneDialModel;
-import net.xpdeveloper.dialer.model.ToneDialModel;
+import net.xpdeveloper.dialer.R;
+import net.xpdeveloper.dialer.ToneDialActivity;
+import net.xpdeveloper.dialer.common.model.DialMemento;
+import net.xpdeveloper.dialer.common.model.IToneDialModel;
+import net.xpdeveloper.dialer.common.model.ToneDialModel;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
