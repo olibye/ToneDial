@@ -13,13 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer.unlimited;
+package net.xpdeveloper.dialer;
 
+import android.content.Context;
+import android.preference.Preference;
 import net.xpdeveloper.dialer.common.ToneDialActivity;
+import net.xpdeveloper.dialer.common.UpgradeStrategy;
 
-public class ToneDialUnlimited extends ToneDialActivity {
+/**
+ * I'm the strategy that tries to encourage the user to upgrade by disabling
+ * certain features
+ * 
+ * @author byeo
+ * 
+ */
+public class LimitedUpgradeStrategy implements UpgradeStrategy {
 
-	public ToneDialUnlimited() {
-		super(new UnlimitedStrategy());
+	@Override
+	public void summarise(Preference preference, Context context) {
+		if (ToneDialActivity.PREF_ENABLE_TONES_ONCE.equals(preference.getKey())) {
+			preference.setSummary(context
+					.getString(R.string.dial_once_upgrade_summary));
+			preference.setEnabled(false);
+		}
 	}
+
 }

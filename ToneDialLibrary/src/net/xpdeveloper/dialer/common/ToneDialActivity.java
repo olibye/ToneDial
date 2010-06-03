@@ -27,6 +27,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 
 /**
@@ -41,6 +42,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
  */
 public class ToneDialActivity extends PreferenceActivity {
 	public static final String ACTION_PREFERENCE_CHANGE = "net.xpdeveloper.dialer.PREFERENCE_CHANGE";
+	public static final String ACTION_TONE_DIAL = "net.xpdeveloper.dialer.TONE_DIAL";
 
 	public static final String EXTRA_COUNTRY_CODE = "net.xpdeveloper.dialer.EXTRA_COUNTRY_CODE";
 	public static final String EXTRA_TRUNK_CODE = "net.xpdeveloper.dialer.EXTRA_TRUNK_CODE";
@@ -53,9 +55,12 @@ public class ToneDialActivity extends PreferenceActivity {
 	private MessageFormat _countrySummaryFormat, _trunkSummaryFormat;
 	private CheckBoxPreference _enabledPreference;
 	private IIntentHelper _intentHelper;
+	private UpgradeStrategy _upgradeStrategy;
+	public static final String PREF_UPGRADE = "net.xpdeveloper.dialer.PREF_UPGRADE";
 
-	public ToneDialActivity() {
+	public ToneDialActivity(UpgradeStrategy upgradeStrategy) {
 		_intentHelper = new IntentHelper(this);
+		_upgradeStrategy = upgradeStrategy;
 	}
 
 	public void enableService(boolean enableTones) {
@@ -104,6 +109,12 @@ public class ToneDialActivity extends PreferenceActivity {
 					}
 				});
 
+		
+		// Selectively disable preferences
+		_upgradeStrategy.summarise(findPreference(PREF_ENABLE_TONES_ONCE), this);
+		_upgradeStrategy.summarise(findPreference(PREF_UPGRADE), this);
+		
+		// Wire up the country and trunk codes
 		OnPreferenceChangeListener countryCodeChange = new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference,
@@ -124,8 +135,8 @@ public class ToneDialActivity extends PreferenceActivity {
 
 		EditTextPreference countryPreference = (EditTextPreference) findPreference(EXTRA_COUNTRY_CODE);
 		countryPreference.setOnPreferenceChangeListener(countryCodeChange);
-		onCodeChange(countryPreference, _countrySummaryFormat, countryPreference
-				.getText());
+		onCodeChange(countryPreference, _countrySummaryFormat,
+				countryPreference.getText());
 
 		EditTextPreference trunkPreference = (EditTextPreference) findPreference(EXTRA_TRUNK_CODE);
 		trunkPreference.setOnPreferenceChangeListener(trunkCodeChange);
@@ -134,6 +145,13 @@ public class ToneDialActivity extends PreferenceActivity {
 
 	}
 
+	@Override
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		// TODO Auto-generated method stub
+		return super.onPreferenceTreeClick(preferenceScreen, preference);
+	}
+	
 	@Override
 	protected void onResume() {
 		boolean enabled = isServiceEnabled();

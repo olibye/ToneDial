@@ -16,10 +16,26 @@
 package net.xpdeveloper.dialer.unlimited;
 
 import net.xpdeveloper.dialer.common.ToneDialActivity;
+import net.xpdeveloper.dialer.common.UpgradeStrategy;
+import android.content.Context;
+import android.preference.Preference;
 
-public class ToneDialUnlimited extends ToneDialActivity {
+/**
+ * You've paid, you may continue
+ * 
+ * @author byeo
+ * 
+ */
+public class UnlimitedStrategy implements UpgradeStrategy {
 
-	public ToneDialUnlimited() {
-		super(new UnlimitedStrategy());
+	@Override
+	public void summarise(Preference preference, Context context) {
+		String key = preference.getKey();
+
+		if (ToneDialActivity.PREF_UPGRADE.equals(key)) {
+			preference.setEnabled(false);
+			preference.setSummary(context
+					.getString(R.string.upgrade_upgrade_summary));
+		}
 	}
 }

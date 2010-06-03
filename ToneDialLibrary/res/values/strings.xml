@@ -8,9 +8,9 @@
 	<string name="enable_tones_summaryOn">Network dialing disabled</string>
 	<string name="enable_tones_summaryOff">Enable Tone Dial</string>
 
-	<string name="enable_tones_once_title">Only Once</string>
-	<string name="enable_tones_once_summaryOn">Return to network dialing after one tone dial</string>
-	<string name="enable_tones_once_summaryOff">Return to network dialing after one tone dial</string>
+	<string name="enable_tones_once_title">Dial Once</string>
+	<string name="enable_tones_once_summaryOn">Normal dialing after one tone dial</string>
+	<string name="enable_tones_once_summaryOff">Normal dialing after one tone dial</string>
 
 	<string name="default_value_country_code_preference">+44</string>
 	<string name="title_country_code_preference">Country Code</string>
@@ -29,6 +29,10 @@
 		Code.
 		Land line calls to people in this country do not use + or the country
 		code.</string>
+
+	<!-- Upgrade summaries -->
+	<string name="dial_once_upgrade_summary">Upgrade to enable</string>
+	<string name="upgrade_upgrade_summary">Thanks for upgrading</string>
 
 	<!-- Notification strings -->
 	<string name="ticker_tone_dial_on">Tone Dial On</string>

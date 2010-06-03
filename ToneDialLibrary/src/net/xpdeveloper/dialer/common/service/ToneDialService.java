@@ -180,7 +180,7 @@ public class ToneDialService extends Service {
 				| Notification.FLAG_NO_CLEAR;
 
 		// Setup the pending intent to launch the UI
-		Intent launchToneDialActivity = new Intent(this, ToneDialActivity.class);
+		Intent launchToneDialActivity = new Intent(ToneDialActivity.ACTION_TONE_DIAL);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				launchToneDialActivity, 0);
 

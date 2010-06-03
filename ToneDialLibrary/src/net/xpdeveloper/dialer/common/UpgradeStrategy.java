@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package net.xpdeveloper.dialer.unlimited;
+package net.xpdeveloper.dialer.common;
 
-import net.xpdeveloper.dialer.common.ToneDialActivity;
+import android.content.Context;
+import android.preference.Preference;
 
-public class ToneDialUnlimited extends ToneDialActivity {
+public interface UpgradeStrategy {
 
-	public ToneDialUnlimited() {
-		super(new UnlimitedStrategy());
-	}
+	void summarise(Preference preference, Context context);
+
 }
