@@ -30,6 +30,8 @@
 		Land line calls to people in this country do not use + or the country
 		code.</string>
 
+	<string name="summary_pref_web">Visit the website to report bugs</string>
+
 	<!-- Upgrade summaries -->
 	<string name="dial_once_upgrade_summary">Upgrade to enable</string>
 	<string name="upgrade_upgrade_summary">Thanks for upgrading</string>
@@ -38,7 +40,7 @@
 	<string name="ticker_tone_dial_on">Tone Dial On</string>
 	<string name="ticker_tone_dial_off">Tone Dial Off</string>
 	<string name="notification_title">Tone Dial</string>
-	<string name="notification_text">Call over a land line, Mobile dialing disabled.</string>
+	<string name="notification_text">Call over a land line, Mobile dialing disabled</string>
 
 	<!-- Notify number -->
 	<string name="ticker_tone_dial">Tone Dial:</string>

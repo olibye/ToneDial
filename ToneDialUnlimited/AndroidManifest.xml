@@ -27,6 +27,8 @@
 
     </application>
 
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
 	<!-- Required for robotium	testing --> 
 	<uses-permission android:name="android.permission.GET_TASKS" />
 

@@ -157,7 +157,7 @@ public class ToneDialService extends Service {
 		} else {
 			if (_receiver != null) {
 				unregisterReceiver(_receiver);
-				_receiver = null; // It's not useable anymore
+				_receiver = null; // It's not usable anymore
 			}
 		}
 	}

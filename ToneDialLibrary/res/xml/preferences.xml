@@ -48,7 +48,7 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen android:key="net.xpdeveloper.dialer.PREF_WEB"
-		android:title="Web" android:summary="Visit the website to raise issues">
+		android:title="Web" android:summary="@string/summary_pref_web">
 		<intent android:action="android.intent.action.VIEW"
 			android:data="http://code.google.com/p/tonedial/issues/list" />
 	</PreferenceScreen>
